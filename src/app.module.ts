@@ -11,6 +11,7 @@ import { ConfigModule } from '@nestjs/config';
 import { VerifyToken } from './middleware/verifyToken';
 // import { RoleMiddleware } from './middleware/RoleMiddleware';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { RawatModule } from './rawat/rawat.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     AuthModule,
     Rekam_medisModule,
     DashboardModule,
+    RawatModule,
     PrismaModule,
   ],
 })

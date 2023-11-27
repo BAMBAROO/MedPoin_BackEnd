@@ -31,21 +31,25 @@ export class AuthController {
     this.abilityFactory = abilityFactory;
   }
 
+  /** allow for role -> SUPERADMIN **/
   @Post('signup')
   signUp(@Body() dto: SignUpDto, @Res() res: Response) {
     return this.authService.signUp(dto, res);
   }
 
+  /** allow for role -> all role **/
   @Post('signin')
   logIn(@Body() dto: SignInDto, @Res() res: Response) {
     return this.authService.signin(dto, res);
   }
 
+  /** allow for role -> all role **/
   @Delete('signout')
   logout(@Req() req: Request, @Res() res: Response) {
     return this.authService.signOut(req, res);
   }
 
+  /** free endpoint **/
   @Get('token')
   refreshToken(@Req() req: Request, @Res() res: Response) {
     return this.authService.refreshToken(req, res);

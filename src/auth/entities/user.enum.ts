@@ -1,5 +1,6 @@
 export enum Role {
-  GOLD = 'gold',
-  SILVER = 'silver',
-  BRONZE = 'bronze',
+  ADMIN = 'admin',
+  SUPERADMIN = 'superadmin',
+  DOKTER = 'DOKTER',
+  PERAWAT = 'PERAWAT',
 }

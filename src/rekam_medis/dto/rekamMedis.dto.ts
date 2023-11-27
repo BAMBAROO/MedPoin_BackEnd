@@ -1,14 +1,15 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class RekamMedisDto {
   @IsNotEmpty()
   @IsString()
   no_rm: string;
 
+  @IsNotEmpty()
   @IsNumber()
   no_ktp: number;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
   no_asuransi: number;
 
@@ -24,24 +25,31 @@ export class RekamMedisDto {
   @IsString()
   tanggal_lahir: string;
 
+  @IsNotEmpty()
   @IsString()
   alamat_lengkap: string;
 
+  @IsNotEmpty()
   @IsString()
   jenis_kelamin: string;
 
+  @IsNotEmpty()
   @IsString()
   status_perkawinan: string;
 
+  @IsNotEmpty()
   @IsString()
   nomor_hp: string;
 
+  @IsNotEmpty()
   @IsString()
   golongan_darah: string;
 
+  @IsNotEmpty()
   @IsString()
   nama_keluarga: string;
 
+  @IsNotEmpty()
   @IsString()
   nomor_hp_keluarga: string;
 }

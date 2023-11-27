@@ -8,11 +8,7 @@ export class Rekam_medisService {
   constructor(private rekamMedisHelperService: RekamMedisHelperService) {}
 
   addPasien(dto: RekamMedisDto, res: Response) {
+    /** must using try and catch **/
     return res.send(this.rekamMedisHelperService.addRekamMedis(dto));
-  }
-
-  /** experiment **/
-  master(res: Response) {
-    return res.status(HttpStatus.OK).json({ noRekamMedis: 12 });
   }
 }

@@ -1,26 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { SignInDto, SignUpDto } from './dto';
-import * as argon from 'argon2';
 import { Response, Request } from 'express';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
 // import { Role } from './entities/user.enum';
 import AuthHelperService from '../helper/authHelper.service';
 
 @Injectable()
 export class AuthService {
-  config: ConfigService;
-  argon;
-
   constructor(
-    private authHelper: AuthHelperService,
-    private jwt: JwtService,
-    config: ConfigService,
-  ) {
-    this.argon = argon;
-    this.config = config;
-  } // untuk mendapatkan akses terhadap PrismaService (prismaClient) yang juga terhadap akses ke databases
+    private authHelper: AuthHelperService /** for access to databases **/,
+  ) {}
 
   async signUp(dto: SignUpDto, res: Response) {
     // const { firstName, lastName, email, password } = dto;
@@ -36,6 +25,7 @@ export class AuthService {
       //   hash,
       // });
       // delete user.hash; // same just select option
+
       return res.status(HttpStatus.CREATED).json(dto);
     } catch (e) {
       /** if unique column has been taken **/
@@ -54,14 +44,14 @@ export class AuthService {
   async signin(dto: SignInDto, res: Response) {
     try {
       /** on development **/
-      const { email, password } = dto;
+      const { user_id, password } = dto;
 
       /** ond development **/
       // const { email, hash } = await this.authHelper.findUserByEmail(dto.email);
       // await this.authHelper.verifyPassword(hash, password);
 
       /** create token and set token **/
-      const payload = { email, hash: password };
+      // const payload = { user_id, hash: password };
       const accessToken = await this.authHelper.createAccessToken(dto);
       const refreshToken = await this.authHelper.createRefreshToken(dto);
       res.cookie('refreshToken', refreshToken, {
@@ -87,11 +77,12 @@ export class AuthService {
   async signOut(req: Request, res: Response) {
     try {
       const refreshToken = req.cookies['refreshToken'];
-      if (!refreshToken)
+      if (!refreshToken) {
         throw new HttpException(
           { error: 'Unauthorized', status: HttpStatus.UNAUTHORIZED },
           HttpStatus.UNAUTHORIZED,
         );
+      }
 
       /** on development **/
       // const { email } = await this.authHelper.findUserByRefreshToken({

@@ -8,7 +8,7 @@ export class Rekam_medisController {
   constructor(private rekamMedisService: Rekam_medisService) {}
 
   @Post()
-  registrasiRekamMedis(@Res() res: Response, @Body() dto: RekamMedisDto) {
+  registrasiRekamMedis(@Body() dto: RekamMedisDto, @Res() res: Response) {
     return this.rekamMedisService.addPasien(dto, res);
   }
 }

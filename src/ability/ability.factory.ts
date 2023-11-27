@@ -10,14 +10,14 @@ import { UserEntity } from '../auth/entities/user.entity';
 import { Role } from '../auth/entities/user.enum';
 
 export const enum Actions {
-  Manage = 'manage', // wildcard
+  Manage = 'manage' /** wildcard **/,
   Create = 'create',
   Read = 'read',
   Update = 'update',
   Delete = 'delete',
 }
 
-const adminRole: Role[] = [Role.GOLD, Role.SILVER];
+const adminRole: Role[] = [Role.ADMIN, Role.SUPERADMIN];
 
 export type Subject = InferSubjects<typeof UserEntity> | 'all';
 type AppAbility = MongoAbility<[Actions, Subject]>;
@@ -28,12 +28,11 @@ export class AbilityFactory {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(
       createMongoAbility,
     );
-
-    if (adminRole.some((role) => user.role.includes(role))) {
+    if (user.role.some((role) => role === Role.SUPERADMIN)) {
       can(Actions.Manage, 'all');
-      cannot(Actions.Manage, UserEntity, {
-        orgId: { $ne: user.orgId }, // conditions in depth
-      }).because("it's not on your control");
+      // cannot(Actions.Manage, UserEntity, {
+      //   orgId: { $ne: user.orgId }, // conditions in depth
+      // }).because("it's not on your control");
     } else {
       can(Actions.Read, 'all');
       cannot(Actions.Create, UserEntity).because(

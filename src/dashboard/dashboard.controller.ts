@@ -6,6 +6,7 @@ import { Response } from 'express';
 export class DashboardController {
   constructor(private dashboardService: DashboardService) {}
 
+  /** allow for role -> all role **/
   @Get()
   dashboard(@Res() res: Response) {
     return this.dashboardService.getDataDashboard(res);

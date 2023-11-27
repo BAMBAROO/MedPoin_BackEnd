@@ -117,9 +117,9 @@ class AuthHelperService {
     });
   }
 
-  async createAccessToken({ email = 'something', hash = 'something' }) {
+  async createAccessToken({ user_id = 'something', hash = 'something' }) {
     return await this.jwt.signAsync(
-      { email, hash },
+      { user_id, hash },
       {
         secret: this.config.get<string>('SECRET_KEY_ACCESS'),
         expiresIn: '40s',
@@ -127,9 +127,9 @@ class AuthHelperService {
     );
   }
 
-  async createRefreshToken({ email = 'something', hash = 'something' }) {
+  async createRefreshToken({ user_id = 'something', hash = 'something' }) {
     return await this.jwt.signAsync(
-      { email, hash },
+      { user_id, hash },
       {
         secret: this.config.get<string>('SECRET_KEY_REFRESH'),
         expiresIn: '1d',
