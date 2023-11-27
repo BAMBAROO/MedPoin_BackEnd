@@ -50,10 +50,11 @@ export class AuthController {
   }
 
   /** free endpoint **/
-  @Get('token')
-  refreshToken(@Req() req: Request, @Res() res: Response) {
-    return this.authService.refreshToken(req, res);
-  }
+  /** on development **/
+  // @Get('token')
+  // refreshToken(@Req() req: Request, @Res() res: Response) {
+  //   return this.authService.refreshToken(req, res);
+  // }
 
   /** for checking role example **/
 

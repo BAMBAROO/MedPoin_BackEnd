@@ -1,4 +1,4 @@
-import { PrismaService } from '../prisma/prisma.service';
+// import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 const dummyData = [
@@ -177,7 +177,7 @@ const dummyData = [
 
 @Injectable()
 class DashboardHelperService {
-  constructor(private prismaService: PrismaService) {}
+  // constructor(private prismaService: PrismaService) {}
 
   dashboard() {
     /** on development **/

@@ -1,5 +1,5 @@
 import * as argon from 'argon2';
-import { PrismaService } from '../prisma/prisma.service';
+// import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -10,7 +10,7 @@ class AuthHelperService {
   argon;
 
   constructor(
-    private prismaService: PrismaService,
+    // private prismaService: PrismaService,
     private jwt: JwtService,
     config: ConfigService,
   ) {
@@ -18,19 +18,19 @@ class AuthHelperService {
     this.config = config;
   }
 
-  async getUsers() {
-    const result = await this.prismaService.accounts.findMany();
-    if (!result)
-      throw new HttpException(
-        {
-          message: 'Users not found',
-          error: 'Not Found',
-          status: HttpStatus.NOT_FOUND,
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    return null;
-  }
+  // async getUsers() {
+  //   const result = await this.prismaService.accounts.findMany();
+  //   if (!result)
+  //     throw new HttpException(
+  //       {
+  //         message: 'Users not found',
+  //         error: 'Not Found',
+  //         status: HttpStatus.NOT_FOUND,
+  //       },
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   return null;
+  // }
 
   async verifyPassword(hashedPassword, password) {
     if (!(await this.argon.verify(hashedPassword, password)))
@@ -49,73 +49,73 @@ class AuthHelperService {
     return await this.argon.hash(password);
   }
 
-  addUser({ firstName, lastName, email, hash }) {
-    return this.prismaService.accounts.create({
-      data: {
-        firstName,
-        lastName,
-        email,
-        hash,
-      },
-    });
-  }
+  // addUser({ firstName, lastName, email, hash }) {
+  //   return this.prismaService.accounts.create({
+  //     data: {
+  //       firstName,
+  //       lastName,
+  //       email,
+  //       hash,
+  //     },
+  //   });
+  // }
 
-  async findUserByEmail(email) {
-    const result = await this.prismaService.accounts.findUnique({
-      where: {
-        email: email,
-      },
-      select: {
-        email: true,
-        hash: true,
-        id: true,
-      },
-    });
-    if (!result)
-      throw new HttpException(
-        {
-          message: 'No user with that email',
-          error: 'Not Found',
-          status: HttpStatus.NOT_FOUND,
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    return result;
-  }
+  // async findUserByEmail(email) {
+  //   const result = await this.prismaService.accounts.findUnique({
+  //     where: {
+  //       email: email,
+  //     },
+  //     select: {
+  //       email: true,
+  //       hash: true,
+  //       id: true,
+  //     },
+  //   });
+  //   if (!result)
+  //     throw new HttpException(
+  //       {
+  //         message: 'No user with that email',
+  //         error: 'Not Found',
+  //         status: HttpStatus.NOT_FOUND,
+  //       },
+  //       HttpStatus.NOT_FOUND,
+  //     );
+  //   return result;
+  // }
 
-  findUserByRefreshToken({ refreshToken }) {
-    return this.prismaService.accounts.findUnique({
-      where: {
-        refreshToken: refreshToken,
-      },
-      select: {
-        email: true,
-        id: true,
-      },
-    });
-  }
+  // findUserByRefreshToken({ refreshToken }) {
+  //   return this.prismaService.accounts.findUnique({
+  //     where: {
+  //       refreshToken: refreshToken,
+  //     },
+  //     select: {
+  //       email: true,
+  //       id: true,
+  //     },
+  //   });
+  // }
 
-  updateToken({ email, refreshToken }) {
-    return this.prismaService.accounts.update({
-      where: {
-        email: email,
-      },
-      data: {
-        refreshToken: refreshToken,
-      },
-    });
-  }
+  // updateToken({ email, refreshToken }) {
+  //   return this.prismaService.accounts.update({
+  //     where: {
+  //       email: email,
+  //     },
+  //     data: {
+  //       refreshToken: refreshToken,
+  //     },
+  //   });
+  // }
 
-  deleteRefreshToken({ email }) {
-    return this.prismaService.accounts.update({
-      where: {
-        email: email,
-      },
-      data: {
-        refreshToken: null,
-      },
-    });
-  }
+  // deleteRefreshToken({ email }) {
+  //   return this.prismaService.accounts.update({
+  //     where: {
+  //       email: email,
+  //     },
+  //     data: {
+  //       refreshToken: null,
+  //     },
+  //   });
+  // }
 
   async createAccessToken({ user_id = 'something', hash = 'something' }) {
     return await this.jwt.signAsync(

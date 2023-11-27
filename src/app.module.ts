@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { Rekam_medisModule } from './rekam_medis/rekam_medis.module';
-import { PrismaModule } from './prisma/prisma.module';
+// import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { VerifyToken } from './middleware/verifyToken';
 // import { RoleMiddleware } from './middleware/RoleMiddleware';
@@ -22,7 +22,7 @@ import { RawatModule } from './rawat/rawat.module';
     Rekam_medisModule,
     DashboardModule,
     RawatModule,
-    PrismaModule,
+    // PrismaModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -102,25 +102,28 @@ export class AuthService {
     }
   }
 
-  async refreshToken(req: Request, res: Response) {
-    try {
-      const refreshToken = req.cookies['refreshToken'];
-      await this.authHelper
-        .findUserByRefreshToken({ refreshToken })
-        .then(async (user: object) => {
-          const accessToken = await this.authHelper.createAccessToken(user);
-          return res.status(HttpStatus.OK).json(accessToken);
-        })
-        .catch((err) => {
-          console.log(err);
-          throw new HttpException(
-            { error: 'Forbidden', status: HttpStatus.FORBIDDEN },
-            HttpStatus.FORBIDDEN,
-          );
-        });
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  }
+  /** on development **/
+  /** for get new accessToken **/
+
+  // async refreshToken(req: Request, res: Response) {
+  //   try {
+  //     const refreshToken = req.cookies['refreshToken'];
+  //     await this.authHelper
+  //       .findUserByRefreshToken({ refreshToken })
+  //       .then(async (user: object) => {
+  //         const accessToken = await this.authHelper.createAccessToken(user);
+  //         return res.status(HttpStatus.OK).json(accessToken);
+  //       })
+  //       .catch((err) => {
+  //         console.log(err);
+  //         throw new HttpException(
+  //           { error: 'Forbidden', status: HttpStatus.FORBIDDEN },
+  //           HttpStatus.FORBIDDEN,
+  //         );
+  //       });
+  //   } catch (err) {
+  //     console.log(err);
+  //     throw err;
+  //   }
+  // }
 }

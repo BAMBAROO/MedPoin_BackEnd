@@ -1,10 +1,10 @@
 import * as argon from 'argon2';
-import { PrismaService } from '../prisma/prisma.service';
+// import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 class RawatHelperService {
-  constructor(private prismaService: PrismaService) {}
+  // constructor(private prismaService: PrismaService) {}
 
   listPatientDoctor() {
     /** get list patient and doctor from table patient and doctor **/
