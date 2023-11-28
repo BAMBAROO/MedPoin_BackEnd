@@ -17,7 +17,7 @@ export const enum Actions {
   Delete = 'delete',
 }
 
-const adminRole: Role[] = [Role.ADMIN, Role.SUPERADMIN];
+const adminRole: Role[] = [Role.ADMIN, Role.STAF];
 
 export type Subject = InferSubjects<typeof UserEntity> | 'all';
 type AppAbility = MongoAbility<[Actions, Subject]>;
@@ -28,7 +28,7 @@ export class AbilityFactory {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(
       createMongoAbility,
     );
-    if (user.role.some((role) => role === Role.SUPERADMIN)) {
+    if (user.role.some((role) => role === Role.ADMIN)) {
       can(Actions.Manage, 'all');
       // cannot(Actions.Manage, UserEntity, {
       //   orgId: { $ne: user.orgId }, // conditions in depth
