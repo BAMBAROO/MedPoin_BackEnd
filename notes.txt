@@ -19,6 +19,8 @@ controllers -> controller menangani http request seperti get, post, delete, upda
 
 Endpoint:
 '/' :GET -> data dashbooard
+'/dokter' :GET -> list dokter
+'/perawat' :GET -> list perawat
 '/registrasi' :POST -> registrasi pasien
 '/signup' :POST -> daftar untuk master
 '/signin' :POST -> masuk untuk semua user

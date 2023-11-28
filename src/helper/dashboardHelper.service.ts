@@ -190,6 +190,55 @@ class DashboardHelperService {
     /** on development **/
     return dummyData;
   }
+
+  dokter() {
+    /** on development **/
+    // code get table dokter
+
+    const listDokter = [
+      {
+        id: '123',
+        nama: 'dr.bryan',
+        spesialis: 'gigi',
+      },
+      {
+        id: '123',
+        nama: 'dr.ahmad',
+        spesialis: 'gigi',
+      },
+      {
+        id: '123',
+        nama: 'dr.bruce',
+        spesialis: 'gigi',
+      },
+    ];
+    return listDokter;
+  }
+
+  perawat() {
+    /** on development **/
+    // code get table perawat
+
+    const listPerawat = [
+      {
+        id: '123',
+        nama: 'woman',
+      },
+      {
+        id: '123',
+        nama: 'woman',
+      },
+      {
+        id: '123',
+        nama: 'woman',
+      },
+      {
+        id: '123',
+        nama: 'woman',
+      },
+    ];
+    return listPerawat;
+  }
 }
 
 export default DashboardHelperService;

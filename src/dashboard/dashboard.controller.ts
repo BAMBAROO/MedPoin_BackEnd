@@ -11,4 +11,14 @@ export class DashboardController {
   dashboard(@Res() res: Response) {
     return this.dashboardService.getDataDashboard(res);
   }
+
+  @Get('/dokter')
+  dokter(@Res() res: Response) {
+    return this.dashboardService.getDokter(res);
+  }
+
+  @Get('/perawat')
+  perawat(@Res() res: Response) {
+    return this.dashboardService.getDokter(res);
+  }
 }

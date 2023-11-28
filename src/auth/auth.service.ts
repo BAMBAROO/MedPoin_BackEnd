@@ -41,6 +41,18 @@ export class AuthService {
     }
   }
 
+  async signUpDokter(dto, res: Response) {
+    return res.status(HttpStatus.CREATED).json(dto);
+  }
+
+  async signUpPerawat(dto, res: Response) {
+    return res.status(HttpStatus.CREATED).json(dto);
+  }
+
+  async signUpStaf(dto, res: Response) {
+    return res.status(HttpStatus.CREATED).json(dto);
+  }
+
   async signin(dto: SignInDto, res: Response) {
     try {
       /** on development **/

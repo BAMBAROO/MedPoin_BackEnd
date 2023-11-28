@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Patch,
   Post,
   Req,
@@ -11,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { SignInDto, SignUpDto } from './dto';
+import { SignInDto, SignUpDokterDto, SignUpDto, SignUpPerawatDto, SignUpStafDto } from "./dto";
 // import { Roles } from './role.decorator';
 // import { Role } from './entities/user.enum';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
@@ -23,11 +24,12 @@ import { AbilityFactory, Actions } from '../ability/ability.factory';
 // CONTROLLER UNTUK MENGELOLA ROUTER DAN VALIDATION
 @Controller()
 export class AuthController {
-  private readonly authService: AuthService;
   private abilityFactory: AbilityFactory;
 
-  constructor(authService: AuthService, abilityFactory: AbilityFactory) {
-    this.authService = authService;
+  constructor(
+    private authService: AuthService,
+    abilityFactory: AbilityFactory,
+  ) {
     this.abilityFactory = abilityFactory;
   }
 
@@ -35,6 +37,21 @@ export class AuthController {
   @Post('signup')
   signUp(@Body() dto: SignUpDto, @Res() res: Response) {
     return this.authService.signUp(dto, res);
+  }
+
+  @Post('signup/dokter')
+  signUpDokter(@Body() dto: SignUpDokterDto, @Res() res: Response) {
+    return this.authService.signUpDokter(dto, res);
+  }
+
+  @Post('signup/perawat')
+  signUpPerawat(@Body() dto: SignUpPerawatDto, @Res() res: Response) {
+    return this.authService.signUpPerawat(dto, res);
+  }
+
+  @Post('signup/staf')
+  signUpStaf(@Body() dto: SignUpStafDto, @Res() res: Response) {
+    return this.authService.signUpStaf(dto, res);
   }
 
   /** allow for role -> all role **/
