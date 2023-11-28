@@ -5,7 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-class RekamMedisHelperService {
+class PasienHelperService {
   config: ConfigService;
   argon;
 
@@ -30,4 +30,4 @@ class RekamMedisHelperService {
   }
 }
 
-export default RekamMedisHelperService;
+export default PasienHelperService;

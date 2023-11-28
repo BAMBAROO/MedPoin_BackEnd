@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class RekamMedisDto {
+export class PasienDto {
   @IsNotEmpty()
   @IsString()
   no_rm: string;
@@ -10,8 +10,8 @@ export class RekamMedisDto {
   no_ktp: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  no_asuransi: number;
+  @IsString()
+  no_asuransi: string;
 
   @IsNotEmpty()
   @IsString()
@@ -54,4 +54,4 @@ export class RekamMedisDto {
   nomor_hp_keluarga: string;
 }
 
-export default RekamMedisDto;
+export default PasienDto;

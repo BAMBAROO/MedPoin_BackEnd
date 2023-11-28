@@ -2,16 +2,17 @@ import {
   MiddlewareConsumer,
   Module,
   NestModule,
-  RequestMethod,
+  // RequestMethod,
 } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { Rekam_medisModule } from './rekam_medis/rekam_medis.module';
+import { PasienModule } from './pasien/pasien.module';
 // import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { VerifyToken } from './middleware/verifyToken';
 // import { RoleMiddleware } from './middleware/RoleMiddleware';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { RawatModule } from './rawat/rawat.module';
+import { AnamnesisModule } from './anamnesis/anamnesis.module';
 
 @Module({
   imports: [
@@ -19,23 +20,25 @@ import { RawatModule } from './rawat/rawat.module';
       isGlobal: true,
     }),
     AuthModule,
-    Rekam_medisModule,
+    PasienModule,
     DashboardModule,
     RawatModule,
+    AnamnesisModule,
     // PrismaModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(VerifyToken).forRoutes(
-      { path: 'registrasi', method: RequestMethod.POST },
-
+    consumer
+      .apply(VerifyToken)
+      .forRoutes
       /** on development **/
+      // { path: 'registrasi', method: RequestMethod.POST },
       // { path: 'users', method: RequestMethod.GET },
       // { path: 'role', method: RequestMethod.POST },
       // { path: 'role', method: RequestMethod.DELETE },
       // { path: 'role', method: RequestMethod.PATCH },
-    );
+      ();
 
     /** on development **/
     // consumer.apply(RoleMiddleware).forRoutes(
