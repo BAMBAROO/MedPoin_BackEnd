@@ -10,29 +10,48 @@ export class DashboardService {
     private dashboardHelper: DashboardHelperService,
   ) {}
 
-  getDataDashboard(res: Response) {
+  async getDataDashboard(res: Response) {
     /** on development **/
     try {
-      const dataDashboard = this.dashboardHelper.dashboard();
-      return res.status(HttpStatus.OK).json(dataDashboard);
+      const data = await this.dashboardHelper.dashboard();
+      return res.status(HttpStatus.OK).json({ data });
     } catch (e) {
       throw e;
     }
   }
 
-  getDokter(res: Response) {
+  async all(res: Response) {
+    /** on development **/
     try {
-      const listDokter = this.dashboardHelper.dokter();
-      return res.status(HttpStatus.OK).json(listDokter);
+      const data = await this.dashboardHelper.all();
+      return res.status(HttpStatus.OK).json({ data });
     } catch (e) {
       throw e;
     }
   }
 
-  getPerawat(res: Response) {
+  async getDokter(res: Response) {
     try {
-      const listPerawat = this.dashboardHelper.perawat();
-      return res.status(HttpStatus.OK).json(listPerawat);
+      const dokter = await this.dashboardHelper.dokter();
+      return res.status(HttpStatus.OK).json({ dokter });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getPerawat(res: Response) {
+    try {
+      const perawat = await this.dashboardHelper.perawat();
+      return res.status(HttpStatus.OK).json({ perawat });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getStaf(res: Response) {
+    try {
+      const staf = await this.dashboardHelper.staf();
+      return res.status(HttpStatus.OK).json({ staf });
     } catch (e) {
       throw e;
     }

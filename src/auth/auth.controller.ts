@@ -3,25 +3,25 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   HttpStatus,
-  Patch,
   Post,
   Req,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Request, Response } from 'express';
-import { SignInDto, SignUpDokterDto, SignUpDto, SignUpPerawatDto, SignUpStafDto } from "./dto";
-// import { Roles } from './role.decorator';
-// import { Role } from './entities/user.enum';
+import {
+  SignInDto,
+  SignUpDokterDto,
+  SignUpDto,
+  SignUpPerawatDto,
+  SignUpStafDto,
+} from './dto';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
-// import { UserEntity } from './entities/user.entity';
-// import { ForbiddenError } from '@casl/ability';
-// import { CheckAbilities } from '../ability/ablity.decorator';
-// import { AbilitiesGuard } from '../ability/ability.guard';
+import { ForbiddenError } from '@casl/ability';
+import { Dokter, Staf } from '../ability/entities/rules.entitiy';
 
-// CONTROLLER UNTUK MENGELOLA ROUTER DAN VALIDATION
 @Controller()
 export class AuthController {
   private abilityFactory: AbilityFactory;
@@ -35,13 +35,47 @@ export class AuthController {
 
   /** allow for role -> SUPERADMIN **/
   @Post('signup')
-  signUp(@Body() dto: SignUpDto, @Res() res: Response) {
-    return this.authService.signUp(dto, res);
+  signUp(@Req() req: Request, @Body() dto: SignUpDto, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Dokter);
+      return this.authService.signUp(dto, res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 
   @Post('signup/dokter')
-  signUpDokter(@Body() dto: SignUpDokterDto, @Res() res: Response) {
-    return this.authService.signUpDokter(dto, res);
+  signUpDokter(
+    @Req() req: Request,
+    @Body() dto: SignUpDokterDto,
+    @Res() res: Response,
+  ) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Dokter);
+      return this.authService.signUpDokter(dto, res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 
   @Post('signup/perawat')
@@ -50,8 +84,27 @@ export class AuthController {
   }
 
   @Post('signup/staf')
-  signUpStaf(@Body() dto: SignUpStafDto, @Res() res: Response) {
-    return this.authService.signUpStaf(dto, res);
+  signUpStaf(
+    @Req() req: Request,
+    @Body() dto: SignUpStafDto,
+    @Res() res: Response,
+  ) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Staf);
+      return this.authService.signUpStaf(dto, res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 
   /** allow for role -> all role **/
@@ -67,50 +120,8 @@ export class AuthController {
   }
 
   /** free endpoint **/
-  /** on development **/
-  // @Get('token')
-  // refreshToken(@Req() req: Request, @Res() res: Response) {
-  //   return this.authService.refreshToken(req, res);
-  // }
-
-  /** for checking role example **/
-
-  // @Post('role')
-  // rolePost(@Req() req: any) {
-  //   const ability = this.abilityFactory.defineAbility(req.user);
-  //   try {
-  //     ForbiddenError.from(ability).throwUnlessCan(Actions.Create, UserEntity);
-  //     return 'helloworld';
-  //   } catch (error) {
-  //     throw new ForbiddenException(error.message);
-  //   }
-  // }
-
-  // @Delete('role')
-  // roleDelete(@Req() req: any) {
-  //   const ability = this.abilityFactory.defineAbility(req.user);
-  //
-  //   try {
-  //     /** Find User That Want To Get Update **/
-  //     const userNeedToGetDelete: UserEntity = {
-  //       name: 'bruce',
-  //       role: [Role.GOLD],
-  //       orgId: 2,
-  //     };
-  //     ForbiddenError.from(ability).throwUnlessCan(
-  //       Actions.Delete,
-  //       userNeedToGetDelete,
-  //     );
-  //     return 'success delete!';
-  //   } catch (error) {
-  //     throw new ForbiddenException(error.message);
-  //   }
-  // }
-
-  // @Patch('role')
-  // @UseGuards(AbilitiesGuard)
-  // @CheckAbilities({ action: Actions.Update, subject: UserEntity })
-  // rolePatch(@Req() req: any) {
-  //   return 'success update';
-  // }
+  @Get('token')
+  refreshToken(@Req() req: Request, @Res() res: Response) {
+    return this.authService.refreshToken(req, res);
+  }
 }

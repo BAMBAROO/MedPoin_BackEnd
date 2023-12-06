@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { RawatDto } from './dto';
 import { Response } from 'express';
 import RawatHelperService from '../helper/rawatHelper.service';
@@ -7,13 +7,12 @@ import RawatHelperService from '../helper/rawatHelper.service';
 export class RawatService {
   constructor(private rawatHelperService: RawatHelperService) {}
 
-  getPatientDoctor(res: Response) {
-    /** must using try and catch **/
-    return res.send(this.rawatHelperService.listPatientDoctor());
-  }
-
-  registrasiRawat(dto: RawatDto, res: Response) {
-    /** must using try and catch **/
-    return res.status(HttpStatus.CREATED).json(this.rawatHelperService.addRawat(dto));
+  async registrasiRawat(dto: RawatDto, res: Response) {
+    try {
+      const data = await this.rawatHelperService.addRawat(dto);
+      return res.status(HttpStatus.OK).json({ data });
+    } catch (e) {
+      throw e;
+    }
   }
 }

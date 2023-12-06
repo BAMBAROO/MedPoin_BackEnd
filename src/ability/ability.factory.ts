@@ -8,6 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../auth/entities/user.entity';
 import { Role } from '../auth/entities/user.enum';
+import { Dokter, Perawat, Staf } from './entities/rules.entitiy';
 
 export const enum Actions {
   Manage = 'manage' /** wildcard **/,
@@ -17,9 +18,13 @@ export const enum Actions {
   Delete = 'delete',
 }
 
-const adminRole: Role[] = [Role.ADMIN, Role.STAF];
+// const adminRole: Role[] = [Role.ADMIN, Role.STAF];
 
-export type Subject = InferSubjects<typeof UserEntity> | 'all';
+export type Subject =
+  | InferSubjects<
+      typeof UserEntity | typeof Dokter | typeof Perawat | typeof Staf
+    >
+  | 'all';
 type AppAbility = MongoAbility<[Actions, Subject]>;
 
 @Injectable()
@@ -28,22 +33,21 @@ export class AbilityFactory {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(
       createMongoAbility,
     );
-    if (user.role.some((role) => role === Role.ADMIN)) {
+    if (user.role === Role.ADMIN) {
       can(Actions.Manage, 'all');
       // cannot(Actions.Manage, UserEntity, {
       //   orgId: { $ne: user.orgId }, // conditions in depth
       // }).because("it's not on your control");
+    } else if (user.role === Role.STAF) {
+      can(Actions.Read, 'all');
+      can(Actions.Create, 'all');
+      cannot(Actions.Create, Dokter).because("Your're not Admin");
+      cannot(Actions.Create, Perawat).because("Your're not Admin");
+      cannot(Actions.Create, Staf).because("Your're not Admin");
+      cannot(Actions.Create, UserEntity).because("Your're not Admin");
     } else {
       can(Actions.Read, 'all');
-      cannot(Actions.Create, UserEntity).because(
-        "Your're not Admin so you can't create",
-      );
-      cannot(Actions.Update, UserEntity).because(
-        "Your're not Admin so you can't update!",
-      );
-      cannot(Actions.Delete, 'all').because(
-        "Your're not Admin so you can't delete!",
-      );
+      cannot(Actions.Create, 'all').because("Your're not Admin");
     }
 
     return build({

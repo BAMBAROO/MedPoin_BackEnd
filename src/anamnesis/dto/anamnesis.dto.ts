@@ -3,6 +3,10 @@ import { IsNotEmpty, IsString } from 'class-validator';
 export class AnamnesisDto {
   @IsString()
   @IsNotEmpty()
+  nama: string;
+
+  @IsString()
+  @IsNotEmpty()
   no_rm: string;
 
   @IsString()
@@ -11,11 +15,11 @@ export class AnamnesisDto {
 
   @IsString()
   @IsNotEmpty()
-  dokter: string;
+  dokter_id: string;
 
   @IsString()
   @IsNotEmpty()
-  perawat: string;
+  perawat_id: string;
 
   @IsString()
   @IsNotEmpty()

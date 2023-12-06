@@ -1,23 +1,149 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator client {
+  provider = "prisma-client-js"
+}
 
-// generator client {
-//   provider = "prisma-client-js"
-// }
-//
-// datasource db {
-//   provider = "mysql"
-//   url      = env("DATABASE_URL")
-// }
-//
-// model Accounts {
-//   id        Int      @id @default(autoincrement())
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-//
-//   email        String  @unique
-//   hash         String
-//   firstName    String?
-//   refreshToken String? @unique
-//   lastName     String?
-// }
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model staf {
+  id   String @id @unique @db.VarChar(100)
+  nama String @db.VarChar(255)
+}
+
+model anamnesis {
+  no_rm        String        @db.VarChar(255)
+  no_rawat     String        @unique @db.VarChar(255)
+  dokter_id    String        @db.VarChar(255)
+  perawat_id   String        @db.VarChar(255)
+  berat        String        @db.VarChar(255)
+  tinggi       String        @db.VarChar(255)
+  tensi        String        @db.VarChar(255)
+  saturasi     String        @db.VarChar(255)
+  suhu         String        @db.VarChar(255)
+  no_anamnesis Int           @id @default(autoincrement())
+  pasien       pasien        @relation(fields: [no_rm], references: [no_rm], onUpdate: Restrict, map: "anamnesis_ibfk_1")
+  antrian      antrian       @relation(fields: [no_rawat], references: [no_rawat], onUpdate: Restrict, map: "anamnesis_ibfk_2")
+  perawat      perawat       @relation(fields: [perawat_id], references: [id], onUpdate: Restrict, map: "anamnesis_ibfk_3")
+  dokter       dokter        @relation(fields: [dokter_id], references: [id], onUpdate: Restrict, map: "anamnesis_ibfk_4")
+  rekam_medis  rekam_medis[]
+
+  @@index([dokter_id], map: "dokter_id")
+  @@index([no_rawat], map: "no_rawat")
+  @@index([no_rm], map: "no_rm")
+  @@index([perawat_id], map: "perawat_id")
+}
+
+model antrian {
+  no_antrian  Int           @db.Int
+  tgl_antrian DateTime      @db.DateTime(0)
+  no_rm       String        @db.VarChar(255)
+  no_rawat    String        @id @unique @db.VarChar(255)
+  dokter_id   String        @db.VarChar(255)
+  status      Int
+  anamnesis   anamnesis[]
+  pasien      pasien        @relation(fields: [no_rm], references: [no_rm], onUpdate: Restrict, map: "antrian_ibfk_1")
+  dokter      dokter        @relation(fields: [dokter_id], references: [id], onUpdate: Restrict, map: "antrian_ibfk_2")
+  pemeriksaan pemeriksaan[]
+  rekam_medis rekam_medis[]
+
+  @@index([dokter_id], map: "dokter_id")
+  @@index([no_rm], map: "no_rm")
+}
+
+model dokter {
+  id          String        @id @unique @db.VarChar(100)
+  nama        String        @db.VarChar(255)
+  spesialis   String        @db.VarChar(255)
+  anamnesis   anamnesis[]
+  antrian     antrian[]
+  pemeriksaan pemeriksaan[]
+}
+
+model icd10 {
+  id          String        @id @db.VarChar(255)
+  nama        String        @db.VarChar(255)
+  pemeriksaan pemeriksaan[]
+}
+
+model icd9 {
+  id          String        @id @db.VarChar(255)
+  nama        String        @db.VarChar(255)
+  pemeriksaan pemeriksaan[]
+}
+
+model pasien {
+  no_rm             String        @id @db.VarChar(100)
+  tgl_daftar        DateTime      @db.DateTime(0)
+  name              String        @db.VarChar(100)
+  no_ktp            String        @db.VarChar(25)
+  no_bpjs           String        @db.VarChar(25)
+  tempat_lahir      String        @db.VarChar(100)
+  tanggal_lahir     String        @db.VarChar(100)
+  jenis_kelamin     String        @db.VarChar(20)
+  gol_darah         String        @db.VarChar(4)
+  no_hp             String        @db.VarChar(15)
+  nama_keluarga     String        @db.VarChar(100)
+  no_hp_keluarga    String        @db.VarChar(15)
+  alamat_lengkap    String        @db.VarChar(100)
+  status_perkawinan String        @db.VarChar(15)
+  anamnesis         anamnesis[]
+  antrian           antrian[]
+  pemeriksaan       pemeriksaan[]
+  rekam_medis       rekam_medis?
+}
+
+model pemeriksaan {
+  no_rm          String        @db.VarChar(255)
+  no_rawat       String        @unique @db.VarChar(255)
+  dokter_id      String        @db.VarChar(255)
+  keluhan        String        @db.VarChar(255)
+  tindakan       String        @db.VarChar(255)
+  resep_obat     String        @db.VarChar(255)
+  diagnosis      String        @db.VarChar(255)
+  no_pemeriksaan Int           @id @default(autoincrement())
+  pasien         pasien        @relation(fields: [no_rm], references: [no_rm], onUpdate: Restrict, map: "pemeriksaan_ibfk_1")
+  antrian        antrian       @relation(fields: [no_rawat], references: [no_rawat], onUpdate: Restrict, map: "pemeriksaan_ibfk_2")
+  dokter         dokter        @relation(fields: [dokter_id], references: [id], onUpdate: Restrict, map: "pemeriksaan_ibfk_3")
+  icd9           icd9          @relation(fields: [tindakan], references: [id], onUpdate: Restrict, map: "pemeriksaan_ibfk_4")
+  icd10          icd10         @relation(fields: [diagnosis], references: [id], onUpdate: Restrict, map: "pemeriksaan_ibfk_5")
+  rekam_medis    rekam_medis[]
+
+  @@index([diagnosis], map: "diagnosis")
+  @@index([dokter_id], map: "dokter_id")
+  @@index([no_rawat], map: "no_rawat")
+  @@index([no_rm], map: "no_rm")
+  @@index([tindakan], map: "tindakan")
+}
+
+model perawat {
+  id        String      @id @unique @db.VarChar(100)
+  nama      String      @db.VarChar(100)
+  anamnesis anamnesis[]
+}
+
+model rekam_medis {
+  no_rm          String      @id @db.VarChar(255)
+  no_rawat       String      @db.VarChar(255)
+  no_anamnesis   Int         @db.Int
+  no_pemeriksaan Int         @db.Int
+  pasien         pasien      @relation(fields: [no_rm], references: [no_rm], onUpdate: Restrict, map: "rekam_medis_ibfk_1")
+  antrian        antrian     @relation(fields: [no_rawat], references: [no_rawat], onUpdate: Restrict, map: "rekam_medis_ibfk_2")
+  anamnesis      anamnesis   @relation(fields: [no_anamnesis], references: [no_anamnesis], onUpdate: Restrict, map: "rekam_medis_ibfk_3")
+  pemeriksaan    pemeriksaan @relation(fields: [no_pemeriksaan], references: [no_pemeriksaan], onUpdate: Restrict, map: "rekam_medis_ibfk_4")
+
+  @@index([no_anamnesis], map: "no_anamnesis")
+  @@index([no_pemeriksaan], map: "no_pemeriksaan")
+  @@index([no_rawat], map: "no_rawat")
+}
+
+model token {
+  refresh_token String @unique(map: "refresh_token_UNIQUE") @db.VarChar(500)
+}
+
+model user {
+  id       String @id @unique @db.VarChar(100)
+  password String @db.VarChar(255)
+  role     String @db.VarChar(100)
+}

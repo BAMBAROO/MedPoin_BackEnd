@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class PasienDto {
   @IsNotEmpty()
@@ -6,16 +6,16 @@ export class PasienDto {
   no_rm: string;
 
   @IsNotEmpty()
-  @IsNumber()
-  no_ktp: number;
+  @IsString()
+  name: string;
 
   @IsNotEmpty()
   @IsString()
-  no_asuransi: string;
+  no_ktp: string;
 
   @IsNotEmpty()
   @IsString()
-  nama_lengkap: string;
+  no_bpjs: string;
 
   @IsNotEmpty()
   @IsString()
@@ -27,23 +27,15 @@ export class PasienDto {
 
   @IsNotEmpty()
   @IsString()
-  alamat_lengkap: string;
-
-  @IsNotEmpty()
-  @IsString()
   jenis_kelamin: string;
 
   @IsNotEmpty()
   @IsString()
-  status_perkawinan: string;
+  gol_darah: string;
 
   @IsNotEmpty()
   @IsString()
-  nomor_hp: string;
-
-  @IsNotEmpty()
-  @IsString()
-  golongan_darah: string;
+  no_hp: string;
 
   @IsNotEmpty()
   @IsString()
@@ -51,7 +43,15 @@ export class PasienDto {
 
   @IsNotEmpty()
   @IsString()
-  nomor_hp_keluarga: string;
+  no_hp_keluarga: string;
+
+  @IsNotEmpty()
+  @IsString()
+  alamat_lengkap: string;
+
+  @IsNotEmpty()
+  @IsString()
+  status_perkawinan: string;
 }
 
 export default PasienDto;

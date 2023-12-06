@@ -15,14 +15,11 @@ export class VerifyToken implements NestMiddleware {
     try {
       const header: string = req.headers['authorization'];
       const token: string = header && header.split(' ')[1];
-      await this.authHelper.verifyRefreshToken({ token });
-
-      /** on development **/
-      // req['user'] = {
-      //   email: payload.email,
-      //   role: payload.role,
-      // };
-
+      const { id, role } = await this.authHelper.verifyAccessToken(token);
+      req['user'] = {
+        id,
+        role,
+      };
       next();
     } catch (err) {
       throw new HttpException(

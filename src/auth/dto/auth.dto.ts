@@ -4,11 +4,7 @@ import { Role } from '../entities/user.enum';
 export class SignUpDto {
   @IsString()
   @IsNotEmpty()
-  user_id: string;
-
-  @IsNotEmpty()
-  @IsNotEmpty()
-  name: string;
+  id: string;
 
   @IsString()
   @IsNotEmpty()
@@ -23,7 +19,7 @@ export class SignUpDto {
 export class SignInDto {
   @IsNotEmpty()
   @IsString()
-  user_id: string;
+  id: string;
 
   @IsNotEmpty()
   @IsString()

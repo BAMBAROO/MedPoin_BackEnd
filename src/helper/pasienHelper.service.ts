@@ -1,32 +1,89 @@
-import * as argon from 'argon2';
-// import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime/library';
+import PasienDto from '../pasien/dto/pasien.dto';
 
 @Injectable()
 class PasienHelperService {
-  config: ConfigService;
-  argon;
+  constructor(private prismaService: PrismaService) {}
 
-  constructor(
-    // private prismaService: PrismaService,
-    private jwt: JwtService,
-    config: ConfigService,
-  ) {
-    this.argon = argon;
-    this.config = config;
+  async addPasien(dto: PasienDto) {
+    /** save to database **/
+    const {
+      no_rm,
+      no_ktp,
+      name,
+      no_bpjs,
+      gol_darah,
+      tempat_lahir,
+      tanggal_lahir,
+      jenis_kelamin,
+      no_hp,
+      nama_keluarga,
+      no_hp_keluarga,
+      status_perkawinan,
+      alamat_lengkap,
+    } = dto;
+
+    try {
+      return await this.prismaService.pasien.create({
+        data: {
+          no_rm,
+          no_ktp,
+          name,
+          tgl_daftar: new Date(),
+          no_bpjs,
+          gol_darah,
+          tempat_lahir,
+          tanggal_lahir,
+          jenis_kelamin,
+          no_hp,
+          nama_keluarga,
+          no_hp_keluarga,
+          alamat_lengkap,
+          status_perkawinan,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        throw new HttpException(
+          {
+            message: 'Credential taken',
+            error: 'Conflict',
+            status: HttpStatus.CONFLICT,
+          },
+          HttpStatus.CONFLICT,
+        );
+      }
+
+      if (e instanceof PrismaClientValidationError) {
+        throw new HttpException(
+          {
+            message: 'Incorrect field type provided',
+            error: 'Conflict',
+            status: HttpStatus.CONFLICT,
+          },
+          HttpStatus.CONFLICT,
+        );
+      }
+      throw e;
+    }
   }
 
-  addRekamMedis(dto) {
-    /** save to database **/
-    // code prisma
-
-    /** on development **/
-    if (dto) {
-      return dto;
+  async rm() {
+    try {
+      const data = await this.prismaService.pasien.aggregate({
+        _max: {
+          no_rm: true,
+        },
+      });
+      return data._max;
+    } catch (e) {
+      throw e;
     }
-    throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
   }
 }
 

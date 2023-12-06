@@ -7,11 +7,7 @@ export class RawatDto {
 
   @IsString()
   @IsNotEmpty()
-  nama_pasien: string;
-
-  @IsString()
-  @IsNotEmpty()
-  dokter: string;
+  dokter_id: string;
 }
 
 export default RawatDto;

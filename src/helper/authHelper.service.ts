@@ -1,16 +1,23 @@
 import * as argon from 'argon2';
-// import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import {
+  SignUpDokterDto,
+  SignUpDto,
+  SignUpPerawatDto,
+  SignUpStafDto,
+} from 'src/auth/dto';
 
 @Injectable()
 class AuthHelperService {
   config: ConfigService;
-  argon;
+  argon: any;
 
   constructor(
-    // private prismaService: PrismaService,
+    private prismaService: PrismaService,
     private jwt: JwtService,
     config: ConfigService,
   ) {
@@ -18,118 +25,255 @@ class AuthHelperService {
     this.config = config;
   }
 
-  // async getUsers() {
-  //   const result = await this.prismaService.accounts.findMany();
-  //   if (!result)
-  //     throw new HttpException(
-  //       {
-  //         message: 'Users not found',
-  //         error: 'Not Found',
-  //         status: HttpStatus.NOT_FOUND,
-  //       },
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   return null;
-  // }
-
-  async verifyPassword(hashedPassword, password) {
-    if (!(await this.argon.verify(hashedPassword, password)))
-      throw new HttpException(
-        {
-          message: 'Password is wrong',
-          error: 'Forbidden',
-          status: HttpStatus.FORBIDDEN,
-        },
-        HttpStatus.FORBIDDEN,
-      );
-    return;
+  async verifyPassword(hashedPassword: string, password: string) {
+    try {
+      const verified = await this.argon.verify(hashedPassword, password);
+      if (!verified)
+        throw new HttpException(
+          {
+            message: 'Password is wrong',
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      return;
+    } catch (e) {
+      if (e instanceof TypeError) {
+        throw new HttpException(
+          {
+            message: 'pchstr must contain a $ as first char',
+            error: 'Internal server error',
+            status: HttpStatus.INTERNAL_SERVER_ERROR,
+          },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+      throw e;
+    }
   }
 
-  async hashingPassword(password) {
+  async findUserById(id: string) {
+    try {
+      const result = await this.prismaService.user.findUnique({
+        where: { id },
+      });
+      if (!result) {
+        throw new HttpException(
+          {
+            message: 'User not found',
+            error: 'Not found',
+            status: HttpStatus.NOT_FOUND,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return result;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async checkExistId(id: string) {
+    try {
+      const nurse = await this.prismaService.perawat.findUnique({
+        where: { id },
+      });
+      const doctor = await this.prismaService.dokter.findUnique({
+        where: { id },
+      });
+      const staff = await this.prismaService.staf.findUnique({
+        where: { id },
+      });
+      if (!nurse && !doctor && !staff) {
+        throw new HttpException(
+          {
+            message: 'No doctor, nurse, or staff with that ID',
+            error: 'Not found',
+            status: HttpStatus.NOT_FOUND,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async checkSignedUpId(id: string) {
+    try {
+      const result = await this.prismaService.user.findUnique({
+        where: { id },
+      });
+      if (result) {
+        throw new HttpException(
+          {
+            message: 'ID has been successfully registered before',
+            error: 'Conflict',
+            status: HttpStatus.CONFLICT,
+          },
+          HttpStatus.CONFLICT,
+        );
+      }
+      return;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async hashingPassword(password: string) {
     return await this.argon.hash(password);
   }
 
-  // addUser({ firstName, lastName, email, hash }) {
-  //   return this.prismaService.accounts.create({
-  //     data: {
-  //       firstName,
-  //       lastName,
-  //       email,
-  //       hash,
-  //     },
-  //   });
-  // }
+  async addUser(dto: SignUpDto) {
+    const { id, password, role } = dto;
+    try {
+      return await this.prismaService.user.create({
+        data: { id, password, role },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new HttpException(
+            {
+              message: 'Credential taken',
+              error: 'Forbidden',
+              status: HttpStatus.FORBIDDEN,
+            },
+            HttpStatus.FORBIDDEN,
+          );
+        }
+      }
+      throw e;
+    }
+  }
 
-  // async findUserByEmail(email) {
-  //   const result = await this.prismaService.accounts.findUnique({
-  //     where: {
-  //       email: email,
-  //     },
-  //     select: {
-  //       email: true,
-  //       hash: true,
-  //       id: true,
-  //     },
-  //   });
-  //   if (!result)
-  //     throw new HttpException(
-  //       {
-  //         message: 'No user with that email',
-  //         error: 'Not Found',
-  //         status: HttpStatus.NOT_FOUND,
-  //       },
-  //       HttpStatus.NOT_FOUND,
-  //     );
-  //   return result;
-  // }
+  async addStaf(dto: SignUpStafDto) {
+    const { id, nama } = dto;
+    try {
+      return await this.prismaService.staf.create({
+        data: { id, nama },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new HttpException(
+            {
+              message: 'Credential Taken',
+              error: 'Forbidden',
+              status: HttpStatus.FORBIDDEN,
+            },
+            HttpStatus.FORBIDDEN,
+          );
+        }
+      }
+      throw e;
+    }
+  }
 
-  // findUserByRefreshToken({ refreshToken }) {
-  //   return this.prismaService.accounts.findUnique({
-  //     where: {
-  //       refreshToken: refreshToken,
-  //     },
-  //     select: {
-  //       email: true,
-  //       id: true,
-  //     },
-  //   });
-  // }
+  async addPerawat(dto: SignUpPerawatDto) {
+    const { id, nama } = dto;
+    try {
+      return await this.prismaService.perawat.create({
+        data: {
+          id,
+          nama,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new HttpException(
+            {
+              message: 'Credential Taken',
+              error: 'Forbidden',
+              status: HttpStatus.FORBIDDEN,
+            },
+            HttpStatus.FORBIDDEN,
+          );
+        }
+      }
+      throw e;
+    }
+  }
 
-  // updateToken({ email, refreshToken }) {
-  //   return this.prismaService.accounts.update({
-  //     where: {
-  //       email: email,
-  //     },
-  //     data: {
-  //       refreshToken: refreshToken,
-  //     },
-  //   });
-  // }
+  async addDokter(dto: SignUpDokterDto) {
+    const { id, nama, spesialis } = dto;
+    try {
+      return await this.prismaService.dokter.create({
+        data: {
+          id,
+          nama,
+          spesialis,
+        },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          throw new HttpException(
+            {
+              message: 'Credential Taken',
+              error: 'Forbidden',
+              status: HttpStatus.FORBIDDEN,
+            },
+            HttpStatus.FORBIDDEN,
+          );
+        }
+      }
+      throw e;
+    }
+  }
 
-  // deleteRefreshToken({ email }) {
-  //   return this.prismaService.accounts.update({
-  //     where: {
-  //       email: email,
-  //     },
-  //     data: {
-  //       refreshToken: null,
-  //     },
-  //   });
-  // }
+  async saveToken(refresh_token: string) {
+    try {
+      return await this.prismaService.token.create({
+        data: {
+          refresh_token,
+        },
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
 
-  async createAccessToken({ user_id = 'something', hash = 'something' }) {
+  async findRefreshToken(refreshToken: string) {
+    try {
+      return await this.prismaService.token.findUnique({
+        where: {
+          refresh_token: refreshToken,
+        },
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async deleteRefreshToken(refreshToken: string) {
+    try {
+      return await this.prismaService.token.delete({
+        where: {
+          refresh_token: refreshToken,
+        },
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async createAccessToken({ id, role }) {
     return await this.jwt.signAsync(
-      { user_id, hash },
+      { id, role },
       {
         secret: this.config.get<string>('SECRET_KEY_ACCESS'),
-        expiresIn: '40s',
+        expiresIn: '1d',
       },
     );
   }
 
-  async createRefreshToken({ user_id = 'something', hash = 'something' }) {
+  async createRefreshToken({ id, role }) {
     return await this.jwt.signAsync(
-      { user_id, hash },
+      { id, role },
       {
         secret: this.config.get<string>('SECRET_KEY_REFRESH'),
         expiresIn: '1d',
@@ -137,9 +281,15 @@ class AuthHelperService {
     );
   }
 
-  async verifyRefreshToken({ token }) {
-    return await this.jwt.verifyAsync(token, {
+  async verifyAccessToken(token: string) {
+    return await this.jwt.verify(token, {
       secret: this.config.get<string>('SECRET_KEY_ACCESS'),
+    });
+  }
+
+  async verifyRefreshToken(token: string) {
+    return await this.jwt.verify(token, {
+      secret: this.config.get<string>('SECRET_KEY_REFRESH'),
     });
   }
 }

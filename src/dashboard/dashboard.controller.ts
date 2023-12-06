@@ -1,24 +1,121 @@
-import { Controller, Get, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { ForbiddenError } from '@casl/ability';
+import { AbilityFactory, Actions } from '../ability/ability.factory';
 
 @Controller('')
 export class DashboardController {
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private abilityFactory: AbilityFactory,
+  ) {}
 
   /** allow for role -> all role **/
   @Get()
-  dashboard(@Res() res: Response) {
-    return this.dashboardService.getDataDashboard(res);
+  dashboard(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      return this.dashboardService.getDataDashboard(res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
+  }
+
+  @Get('all')
+  all(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      return this.dashboardService.all(res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 
   @Get('/dokter')
-  dokter(@Res() res: Response) {
-    return this.dashboardService.getDokter(res);
+  dokter(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      return this.dashboardService.getDokter(res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 
   @Get('/perawat')
-  perawat(@Res() res: Response) {
-    return this.dashboardService.getDokter(res);
+  perawat(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      return this.dashboardService.getPerawat(res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
+  }
+
+  @Get('/staf')
+  staf(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      return this.dashboardService.getStaf(res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 }

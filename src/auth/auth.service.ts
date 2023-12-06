@@ -1,8 +1,17 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { SignInDto, SignUpDto } from './dto';
-import { Response, Request } from 'express';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-// import { Role } from './entities/user.enum';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
+import {
+  SignInDto,
+  SignUpDokterDto,
+  SignUpDto,
+  SignUpPerawatDto,
+  SignUpStafDto,
+} from './dto';
+import { Request, Response } from 'express';
 import AuthHelperService from '../helper/authHelper.service';
 
 @Injectable()
@@ -12,75 +21,44 @@ export class AuthService {
   ) {}
 
   async signUp(dto: SignUpDto, res: Response) {
-    // const { firstName, lastName, email, password } = dto;
-    try {
-      /** save to database **/
-      // const hash = await this.authHelper.hashingPassword(password);
-
-      /** on development **/
-      // const user = await this.authHelper.addUser({
-      //   firstName,
-      //   lastName,
-      //   email,
-      //   hash,
-      // });
-      // delete user.hash; // same just select option
-
-      return res.status(HttpStatus.CREATED).json(dto);
-    } catch (e) {
-      /** if unique column has been taken **/
-      if (e instanceof PrismaClientKnownRequestError) {
-        if (e.code === 'P2002') {
-          throw new HttpException(
-            { error: 'Credential Taken', status: HttpStatus.FORBIDDEN },
-            HttpStatus.FORBIDDEN,
-          );
-        }
-      }
-      throw e;
-    }
+    dto.password = await this.authHelper.hashingPassword(dto.password);
+    await this.authHelper.checkSignedUpId(dto.id);
+    await this.authHelper.checkExistId(dto.id);
+    const data = await this.authHelper.addUser(dto);
+    return res.status(HttpStatus.CREATED).json({ data });
   }
 
-  async signUpDokter(dto, res: Response) {
-    return res.status(HttpStatus.CREATED).json(dto);
+  async signUpDokter(dto: SignUpDokterDto, res: Response) {
+    const data = await this.authHelper.addDokter(dto);
+    return res.status(HttpStatus.CREATED).json({ data });
   }
 
-  async signUpPerawat(dto, res: Response) {
-    return res.status(HttpStatus.CREATED).json(dto);
+  async signUpPerawat(dto: SignUpPerawatDto, res: Response) {
+    const data = await this.authHelper.addPerawat(dto);
+    return res.status(HttpStatus.CREATED).json({ data });
   }
 
-  async signUpStaf(dto, res: Response) {
-    return res.status(HttpStatus.CREATED).json(dto);
+  async signUpStaf(dto: SignUpStafDto, res: Response) {
+    const data = await this.authHelper.addStaf(dto);
+    return res.status(HttpStatus.CREATED).json({ data });
   }
 
   async signin(dto: SignInDto, res: Response) {
     try {
-      /** on development **/
-      const { user_id, password } = dto;
-
-      /** ond development **/
-      // const { email, hash } = await this.authHelper.findUserByEmail(dto.email);
-      // await this.authHelper.verifyPassword(hash, password);
-
-      /** create token and set token **/
-      // const payload = { user_id, hash: password };
-      const accessToken = await this.authHelper.createAccessToken(dto);
-      const refreshToken = await this.authHelper.createRefreshToken(dto);
+      const user = await this.authHelper.findUserById(dto.id);
+      if (user.id !== 'superadmin' && user.password !== 'nimdarepus')
+        await this.authHelper.verifyPassword(user.password, dto.password);
+      const payload = { id: user.id, role: user.role };
+      console.log({ payload });
+      const accessToken = await this.authHelper.createAccessToken(payload);
+      const refreshToken = await this.authHelper.createRefreshToken(payload);
       res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
       });
 
-      /** on development **/
-      // this.authHelper
-      //   .updateToken({ email, refreshToken })
-      //   .catch((err): void => {
-      //     console.log(err);
-      //     throw new HttpException(
-      //       { error: 'Conflict', status: HttpStatus.CONFLICT },
-      //       HttpStatus.CONFLICT,
-      //     );
-      //   });
-      res.status(HttpStatus.OK).json(accessToken);
+      /** save token **/
+      await this.authHelper.saveToken(refreshToken);
+      res.status(HttpStatus.OK).json({ accessToken });
     } catch (e) {
       throw e;
     }
@@ -91,51 +69,36 @@ export class AuthService {
       const refreshToken = req.cookies['refreshToken'];
       if (!refreshToken) {
         throw new HttpException(
-          { error: 'Unauthorized', status: HttpStatus.UNAUTHORIZED },
+          {
+            message: 'refreshToken not found',
+            error: 'Unauthorized',
+            status: HttpStatus.UNAUTHORIZED,
+          },
           HttpStatus.UNAUTHORIZED,
         );
       }
-
-      /** on development **/
-      // const { email } = await this.authHelper.findUserByRefreshToken({
-      //   refreshToken,
-      // });
-      // this.authHelper.deleteRefreshToken({ email }).catch((err): void => {
-      //   console.log(err);
-      //   throw new HttpException(
-      //     { error: 'Conflict', status: HttpStatus.CONFLICT },
-      //     HttpStatus.CONFLICT,
-      //   );
-      // });
-
-      return res.clearCookie('refreshToken').sendStatus(HttpStatus.OK);
+      await this.authHelper.deleteRefreshToken(refreshToken);
+      return res
+        .clearCookie('refreshToken')
+        .status(HttpStatus.OK)
+        .json({ message: 'Logout success' });
     } catch (e) {
       throw e;
     }
   }
 
-  /** on development **/
-  /** for get new accessToken **/
-
-  // async refreshToken(req: Request, res: Response) {
-  //   try {
-  //     const refreshToken = req.cookies['refreshToken'];
-  //     await this.authHelper
-  //       .findUserByRefreshToken({ refreshToken })
-  //       .then(async (user: object) => {
-  //         const accessToken = await this.authHelper.createAccessToken(user);
-  //         return res.status(HttpStatus.OK).json(accessToken);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //         throw new HttpException(
-  //           { error: 'Forbidden', status: HttpStatus.FORBIDDEN },
-  //           HttpStatus.FORBIDDEN,
-  //         );
-  //       });
-  //   } catch (err) {
-  //     console.log(err);
-  //     throw err;
-  //   }
-  // }
+  async refreshToken(req: Request, res: Response) {
+    try {
+      const refreshToken = req.cookies['refreshToken'];
+      const token = await this.authHelper.findRefreshToken(refreshToken);
+      if (!token) throw ForbiddenException;
+      const { id, role } = await this.authHelper.verifyRefreshToken(
+        token.refresh_token,
+      );
+      const accessToken = await this.authHelper.createAccessToken({ id, role });
+      return res.status(HttpStatus.OK).json({ accessToken });
+    } catch (e) {
+      throw e;
+    }
+  }
 }

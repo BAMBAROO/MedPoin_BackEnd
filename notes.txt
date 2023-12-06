@@ -27,4 +27,7 @@ Endpoint:
 '/signout' :DELETE -> keluar akun
 '/rawat' :GET -> nomor remak medis terakhir
 '/rawat' :POST -> daftar rawat
+'/anamnesis' :POST -> daftar anamnesis
+'/rekammedis' :POST -> daftar rekam medis
+'/pemeriksaan' :POST -> add pemeriksaan dari antrian
 ... on development
