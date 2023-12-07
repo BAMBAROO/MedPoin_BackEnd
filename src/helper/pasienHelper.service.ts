@@ -73,6 +73,40 @@ class PasienHelperService {
     }
   }
 
+  async all() {
+    try {
+      const data = await this.prismaService.pasien.findMany({
+        select: {
+          no_rm: true,
+          name: true,
+          alamat_lengkap: true,
+          no_hp: true,
+          tgl_daftar: true,
+          no_ktp: true,
+          no_bpjs: true,
+          no_hp_keluarga: true,
+          gol_darah: true,
+          tempat_lahir: true,
+          tanggal_lahir: true,
+          status_perkawinan: true,
+        },
+      });
+      if (data.length === 0) {
+        throw new HttpException(
+          {
+            message: 'Data not found',
+            error: 'Not found',
+            status: HttpStatus.NOT_FOUND,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async rm() {
     try {
       const data = await this.prismaService.pasien.aggregate({

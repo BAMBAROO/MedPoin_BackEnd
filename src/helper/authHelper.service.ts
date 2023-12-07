@@ -28,6 +28,7 @@ class AuthHelperService {
   async verifyPassword(hashedPassword: string, password: string) {
     try {
       const verified = await this.argon.verify(hashedPassword, password);
+      console.log({ hashedPassword, password });
       if (!verified)
         throw new HttpException(
           {
@@ -42,11 +43,11 @@ class AuthHelperService {
       if (e instanceof TypeError) {
         throw new HttpException(
           {
-            message: 'pchstr must contain a $ as first char',
-            error: 'Internal server error',
-            status: HttpStatus.INTERNAL_SERVER_ERROR,
+            message: 'Password is wrong',
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
           },
-          HttpStatus.INTERNAL_SERVER_ERROR,
+          HttpStatus.FORBIDDEN,
         );
       }
       throw e;

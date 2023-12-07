@@ -16,6 +16,16 @@ export class PasienService {
     }
   }
 
+  async all(res: Response) {
+    /** on development **/
+    try {
+      const data = await this.pasienHelperService.all();
+      return res.status(HttpStatus.OK).json({ data });
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getRm(res: Response) {
     const data = await this.pasienHelperService.rm();
     return res.status(HttpStatus.OK).json({ data });

@@ -13,9 +13,8 @@ import { PasienDto } from './dto';
 import { Request, Response } from 'express';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
-import { Staf } from '../ability/entities/rules.entitiy';
 
-@Controller('registrasi')
+@Controller('pasien')
 export class PasienController {
   constructor(
     private pasienService: PasienService,
@@ -23,7 +22,7 @@ export class PasienController {
   ) {}
 
   /** allow role -> staf and admin **/
-  @Post()
+  @Post('registrasi')
   registrasiPasien(
     @Body() dto: PasienDto,
     @Req() req: Request,
@@ -31,7 +30,7 @@ export class PasienController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Staf);
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
       return this.pasienService.addPasien(dto, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
@@ -48,6 +47,26 @@ export class PasienController {
   }
 
   @Get()
+  all(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      return this.pasienService.all(res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
+  }
+
+  @Get('rm')
   lastRm(@Req() req: Request, @Res() res: Response) {
     console.log(req['user']);
     const ability = this.abilityFactory.defineAbility(req['user']);

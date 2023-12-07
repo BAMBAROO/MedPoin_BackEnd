@@ -25,7 +25,9 @@ export class AuthService {
     await this.authHelper.checkSignedUpId(dto.id);
     await this.authHelper.checkExistId(dto.id);
     const data = await this.authHelper.addUser(dto);
-    return res.status(HttpStatus.CREATED).json({ data });
+    return res
+      .status(HttpStatus.CREATED)
+      .json({ data: { id: data.id, role: data.role } });
   }
 
   async signUpDokter(dto: SignUpDokterDto, res: Response) {
@@ -46,10 +48,9 @@ export class AuthService {
   async signin(dto: SignInDto, res: Response) {
     try {
       const user = await this.authHelper.findUserById(dto.id);
-      if (user.id !== 'superadmin' && user.password !== 'nimdarepus')
+      if (dto.id !== 'superadmin' || dto.password !== 'nimdarepus')
         await this.authHelper.verifyPassword(user.password, dto.password);
       const payload = { id: user.id, role: user.role };
-      console.log({ payload });
       const accessToken = await this.authHelper.createAccessToken(payload);
       const refreshToken = await this.authHelper.createRefreshToken(payload);
       res.cookie('refreshToken', refreshToken, {
@@ -58,7 +59,9 @@ export class AuthService {
 
       /** save token **/
       await this.authHelper.saveToken(refreshToken);
-      res.status(HttpStatus.OK).json({ accessToken });
+      res
+        .status(HttpStatus.OK)
+        .json({ accessToken, role: user.role, id: user.id });
     } catch (e) {
       throw e;
     }

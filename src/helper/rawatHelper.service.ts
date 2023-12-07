@@ -1,6 +1,7 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RawatDto } from '../rawat/dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Injectable()
 class RawatHelperService {
@@ -53,6 +54,16 @@ class RawatHelperService {
         },
       });
     } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        throw new HttpException(
+          {
+            message: 'no_rm not registered',
+            error: 'Bad request',
+            status: HttpStatus.BAD_REQUEST,
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       throw e;
     }
   }

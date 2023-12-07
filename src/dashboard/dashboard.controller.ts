@@ -39,26 +39,6 @@ export class DashboardController {
     }
   }
 
-  @Get('all')
-  all(@Req() req: Request, @Res() res: Response) {
-    const ability = this.abilityFactory.defineAbility(req['user']);
-    try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.dashboardService.all(res);
-    } catch (e) {
-      if (e instanceof ForbiddenError) {
-        throw new HttpException(
-          {
-            message: e.message,
-            error: 'Forbidden',
-            status: HttpStatus.FORBIDDEN,
-          },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-    }
-  }
-
   @Get('/dokter')
   dokter(@Req() req: Request, @Res() res: Response) {
     const ability = this.abilityFactory.defineAbility(req['user']);

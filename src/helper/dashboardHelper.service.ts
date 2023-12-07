@@ -55,41 +55,6 @@ class DashboardHelperService {
     }
   }
 
-  async all() {
-    try {
-      const data = await this.prismaService.pasien.findMany({
-        select: {
-          no_rm: true,
-          name: true,
-          alamat_lengkap: true,
-          no_hp: true,
-          antrian: {
-            select: {
-              no_antrian: true,
-              no_rawat: true,
-              status: true,
-              tgl_antrian: true,
-              dokter_id: true,
-            },
-          },
-        },
-      });
-      if (data.length === 0) {
-        throw new HttpException(
-          {
-            message: 'Data not found',
-            error: 'Not found',
-            status: HttpStatus.NOT_FOUND,
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      return data;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async dokter() {
     try {
       const data = await this.prismaService.dokter.findMany();

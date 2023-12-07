@@ -20,16 +20,6 @@ export class DashboardService {
     }
   }
 
-  async all(res: Response) {
-    /** on development **/
-    try {
-      const data = await this.dashboardHelper.all();
-      return res.status(HttpStatus.OK).json({ data });
-    } catch (e) {
-      throw e;
-    }
-  }
-
   async getDokter(res: Response) {
     try {
       const dokter = await this.dashboardHelper.dokter();

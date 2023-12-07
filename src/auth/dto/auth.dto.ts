@@ -31,7 +31,7 @@ export class SignUpDokterDto {
   @IsNotEmpty()
   id: string;
 
-  @IsNotEmpty()
+  @IsString()
   @IsNotEmpty()
   nama: string;
 
