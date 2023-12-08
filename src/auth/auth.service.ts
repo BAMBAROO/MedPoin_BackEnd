@@ -31,7 +31,7 @@ export class AuthService {
       data: { id: data.id, role: data.role },
     };
     return res.status(HttpStatus.CREATED).json({
-      response,
+      ...response,
       timeStamp: new Date().toISOString(),
       path: req.path,
     });
@@ -45,7 +45,7 @@ export class AuthService {
       data: data,
     };
     return res.status(HttpStatus.CREATED).json({
-      response,
+      ...response,
       timeStamp: new Date().toISOString(),
       path: req.path,
     });
@@ -59,7 +59,7 @@ export class AuthService {
       data: data,
     };
     return res.status(HttpStatus.CREATED).json({
-      response,
+      ...response,
       timeStamp: new Date().toISOString(),
       path: req.path,
     });
@@ -73,7 +73,7 @@ export class AuthService {
       data: data,
     };
     return res.status(HttpStatus.CREATED).json({
-      response,
+      ...response,
       timeStamp: new Date().toISOString(),
       path: req.path,
     });
@@ -99,7 +99,7 @@ export class AuthService {
       /** save token **/
       await this.authHelper.saveToken(refreshToken);
       res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
@@ -127,11 +127,14 @@ export class AuthService {
         message: 'success',
         data: null,
       };
-      return res.clearCookie('refreshToken').status(HttpStatus.OK).json({
-        response,
-        timeStamp: new Date().toISOString(),
-        path: req.path,
-      });
+      return res
+        .clearCookie('refreshToken')
+        .status(HttpStatus.OK)
+        .json({
+          ...response,
+          timeStamp: new Date().toISOString(),
+          path: req.path,
+        });
     } catch (e) {
       throw e;
     }
@@ -152,7 +155,7 @@ export class AuthService {
         data: accessToken,
       };
       return res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
