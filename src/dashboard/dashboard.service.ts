@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 // import { PrismaService } from '../prisma/prisma.service';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import DashboardHelperService from '../helper/dashboardHelper.service';
 
 @Injectable()
@@ -10,38 +10,74 @@ export class DashboardService {
     private dashboardHelper: DashboardHelperService,
   ) {}
 
-  async getDataDashboard(res: Response) {
+  async getDataDashboard(req: Request, res: Response) {
     /** on development **/
     try {
       const data = await this.dashboardHelper.dashboard();
-      return res.status(HttpStatus.OK).json({ data });
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
   }
 
-  async getDokter(res: Response) {
+  async getDokter(req: Request, res: Response) {
     try {
-      const dokter = await this.dashboardHelper.dokter();
-      return res.status(HttpStatus.OK).json({ dokter });
+      const data = await this.dashboardHelper.dokter();
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
   }
 
-  async getPerawat(res: Response) {
+  async getPerawat(req: Request, res: Response) {
     try {
-      const perawat = await this.dashboardHelper.perawat();
-      return res.status(HttpStatus.OK).json({ perawat });
+      const data = await this.dashboardHelper.perawat();
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
   }
 
-  async getStaf(res: Response) {
+  async getStaf(req: Request, res: Response) {
     try {
-      const staf = await this.dashboardHelper.staf();
-      return res.status(HttpStatus.OK).json({ staf });
+      const data = await this.dashboardHelper.staf();
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }

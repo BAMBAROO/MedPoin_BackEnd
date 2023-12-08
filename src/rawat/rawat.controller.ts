@@ -32,7 +32,7 @@ export class RawatController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
-      return this.rawatService.registrasiRawat(dto, res);
+      return this.rawatService.registrasiRawat(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(

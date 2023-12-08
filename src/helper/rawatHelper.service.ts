@@ -29,8 +29,6 @@ class RawatHelperService {
         no_rawat: true,
       },
     });
-    console.log({ result });
-    console.log({ rawat });
     const no_antrian: number =
       result === null
         ? 1

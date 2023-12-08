@@ -32,7 +32,7 @@ export class AnamnesisController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
-      return this.anamnesisService.addAnamnesis(dto, res);
+      return this.anamnesisService.addAnamnesis(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(

@@ -1,33 +1,60 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PasienDto } from './dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import PasienHelperService from '../helper/pasienHelper.service';
 
 @Injectable()
 export class PasienService {
   constructor(private pasienHelperService: PasienHelperService) {}
 
-  async addPasien(dto: PasienDto, res: Response) {
+  async addPasien(dto: PasienDto, req: Request, res: Response) {
     try {
       const data = await this.pasienHelperService.addPasien(dto);
-      return res.status(HttpStatus.OK).json({ data });
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
   }
 
-  async all(res: Response) {
+  async all(req: Request, res: Response) {
     /** on development **/
     try {
       const data = await this.pasienHelperService.all();
-      return res.status(HttpStatus.OK).json({ data });
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
   }
 
-  async getRm(res: Response) {
+  async getRm(req: Request, res: Response) {
     const data = await this.pasienHelperService.rm();
-    return res.status(HttpStatus.OK).json({ data });
+    const response = {
+      error: false,
+      message: 'success',
+      data: data,
+    };
+    return res.status(HttpStatus.OK).json({
+      response,
+      timeStamp: new Date().toISOString(),
+      path: req.path,
+    });
   }
 }

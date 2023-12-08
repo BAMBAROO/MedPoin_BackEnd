@@ -1,17 +1,26 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { AnamnesisDto } from './dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import AnamnesisHelperService from '../helper/anamnesisHelper.service';
 
 @Injectable()
 export class AnamnesisService {
   constructor(private anamnesisHelperService: AnamnesisHelperService) {}
 
-  async addAnamnesis(dto: AnamnesisDto, res: Response) {
+  async addAnamnesis(dto: AnamnesisDto, req: Request, res: Response) {
     /** must using try and catch **/
     try {
       const data = await this.anamnesisHelperService.addAnamnesis(dto);
-      return res.status(HttpStatus.CREATED).json({ data });
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }

@@ -20,32 +20,66 @@ export class AuthService {
     private authHelper: AuthHelperService /** for access to databases **/,
   ) {}
 
-  async signUp(dto: SignUpDto, res: Response) {
+  async signUp(dto: SignUpDto, req: Request, res: Response) {
     dto.password = await this.authHelper.hashingPassword(dto.password);
     await this.authHelper.checkSignedUpId(dto.id);
     await this.authHelper.checkExistId(dto.id);
     const data = await this.authHelper.addUser(dto);
-    return res
-      .status(HttpStatus.CREATED)
-      .json({ data: { id: data.id, role: data.role } });
+    const response = {
+      error: false,
+      message: 'success',
+      data: { id: data.id, role: data.role },
+    };
+    return res.status(HttpStatus.CREATED).json({
+      response,
+      timeStamp: new Date().toISOString(),
+      path: req.path,
+    });
   }
 
-  async signUpDokter(dto: SignUpDokterDto, res: Response) {
+  async signUpDokter(dto: SignUpDokterDto, req: Request, res: Response) {
     const data = await this.authHelper.addDokter(dto);
-    return res.status(HttpStatus.CREATED).json({ data });
+    const response = {
+      error: false,
+      message: 'success',
+      data: data,
+    };
+    return res.status(HttpStatus.CREATED).json({
+      response,
+      timeStamp: new Date().toISOString(),
+      path: req.path,
+    });
   }
 
-  async signUpPerawat(dto: SignUpPerawatDto, res: Response) {
+  async signUpPerawat(dto: SignUpPerawatDto, req: Request, res: Response) {
     const data = await this.authHelper.addPerawat(dto);
-    return res.status(HttpStatus.CREATED).json({ data });
+    const response = {
+      error: false,
+      message: 'success',
+      data: data,
+    };
+    return res.status(HttpStatus.CREATED).json({
+      response,
+      timeStamp: new Date().toISOString(),
+      path: req.path,
+    });
   }
 
-  async signUpStaf(dto: SignUpStafDto, res: Response) {
+  async signUpStaf(dto: SignUpStafDto, req: Request, res: Response) {
     const data = await this.authHelper.addStaf(dto);
-    return res.status(HttpStatus.CREATED).json({ data });
+    const response = {
+      error: false,
+      message: 'success',
+      data: data,
+    };
+    return res.status(HttpStatus.CREATED).json({
+      response,
+      timeStamp: new Date().toISOString(),
+      path: req.path,
+    });
   }
 
-  async signin(dto: SignInDto, res: Response) {
+  async signin(dto: SignInDto, req: Request, res: Response) {
     try {
       const user = await this.authHelper.findUserById(dto.id);
       if (dto.id !== 'superadmin' || dto.password !== 'nimdarepus')
@@ -56,12 +90,19 @@ export class AuthService {
       res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
       });
+      const response = {
+        error: false,
+        message: 'success',
+        data: { accessToken, role: user.role, id: user.id },
+      };
 
       /** save token **/
       await this.authHelper.saveToken(refreshToken);
-      res
-        .status(HttpStatus.OK)
-        .json({ accessToken, role: user.role, id: user.id });
+      res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
@@ -81,10 +122,16 @@ export class AuthService {
         );
       }
       await this.authHelper.deleteRefreshToken(refreshToken);
-      return res
-        .clearCookie('refreshToken')
-        .status(HttpStatus.OK)
-        .json({ message: 'Logout success' });
+      const response = {
+        error: false,
+        message: 'success',
+        data: null,
+      };
+      return res.clearCookie('refreshToken').status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
@@ -99,7 +146,16 @@ export class AuthService {
         token.refresh_token,
       );
       const accessToken = await this.authHelper.createAccessToken({ id, role });
-      return res.status(HttpStatus.OK).json({ accessToken });
+      const response = {
+        error: false,
+        message: 'success',
+        data: accessToken,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }

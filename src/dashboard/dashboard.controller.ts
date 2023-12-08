@@ -11,7 +11,7 @@ import { Request, Response } from 'express';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
 
-@Controller('')
+@Controller('dashboard')
 export class DashboardController {
   constructor(
     private dashboardService: DashboardService,
@@ -24,7 +24,7 @@ export class DashboardController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.dashboardService.getDataDashboard(res);
+      return this.dashboardService.getDataDashboard(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -44,7 +44,7 @@ export class DashboardController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.dashboardService.getDokter(res);
+      return this.dashboardService.getDokter(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -64,7 +64,7 @@ export class DashboardController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.dashboardService.getPerawat(res);
+      return this.dashboardService.getPerawat(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -84,7 +84,7 @@ export class DashboardController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.dashboardService.getStaf(res);
+      return this.dashboardService.getStaf(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(

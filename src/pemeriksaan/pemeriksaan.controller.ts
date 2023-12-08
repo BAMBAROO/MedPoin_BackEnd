@@ -29,7 +29,7 @@ export class PemeriksaanController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
-      return this.pemeriksaanService.pemeriksaanDokter(dto, res);
+      return this.pemeriksaanService.pemeriksaanDokter(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(

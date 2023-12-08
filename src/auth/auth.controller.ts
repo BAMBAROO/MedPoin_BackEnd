@@ -39,7 +39,7 @@ export class AuthController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Dokter);
-      return this.authService.signUp(dto, res);
+      return this.authService.signUp(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -63,7 +63,7 @@ export class AuthController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Dokter);
-      return this.authService.signUpDokter(dto, res);
+      return this.authService.signUpDokter(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -79,8 +79,12 @@ export class AuthController {
   }
 
   @Post('signup/perawat')
-  signUpPerawat(@Body() dto: SignUpPerawatDto, @Res() res: Response) {
-    return this.authService.signUpPerawat(dto, res);
+  signUpPerawat(
+    @Body() dto: SignUpPerawatDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    return this.authService.signUpPerawat(dto, req, res);
   }
 
   @Post('signup/staf')
@@ -92,7 +96,7 @@ export class AuthController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Staf);
-      return this.authService.signUpStaf(dto, res);
+      return this.authService.signUpStaf(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -109,8 +113,8 @@ export class AuthController {
 
   /** allow for role -> all role **/
   @Post('signin')
-  logIn(@Body() dto: SignInDto, @Res() res: Response) {
-    return this.authService.signin(dto, res);
+  logIn(@Body() dto: SignInDto, @Req() req: Request, @Res() res: Response) {
+    return this.authService.signin(dto, req, res);
   }
 
   /** allow for role -> all role **/

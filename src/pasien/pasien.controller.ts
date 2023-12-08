@@ -31,7 +31,7 @@ export class PasienController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
-      return this.pasienService.addPasien(dto, res);
+      return this.pasienService.addPasien(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -51,7 +51,7 @@ export class PasienController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.pasienService.all(res);
+      return this.pasienService.all(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -72,7 +72,7 @@ export class PasienController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.pasienService.getRm(res);
+      return this.pasienService.getRm(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(

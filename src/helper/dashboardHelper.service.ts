@@ -11,7 +11,7 @@ function dateFiltering(data: any) {
       return data;
     }
   });
-  return result.filter((data: any) => data !== undefined);
+  return result.filter((data: any): boolean => data !== undefined);
 }
 
 @Injectable()

@@ -1,16 +1,25 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { RawatDto } from './dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import RawatHelperService from '../helper/rawatHelper.service';
 
 @Injectable()
 export class RawatService {
   constructor(private rawatHelperService: RawatHelperService) {}
 
-  async registrasiRawat(dto: RawatDto, res: Response) {
+  async registrasiRawat(dto: RawatDto, req: Request, res: Response) {
     try {
       const data = await this.rawatHelperService.addRawat(dto);
-      return res.status(HttpStatus.OK).json({ data });
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }
