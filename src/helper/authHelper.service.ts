@@ -62,8 +62,8 @@ class AuthHelperService {
       if (!result) {
         throw new HttpException(
           {
-            message: 'User not found',
             error: 'Not found',
+            message: 'User not found',
             status: HttpStatus.NOT_FOUND,
           },
           HttpStatus.NOT_FOUND,

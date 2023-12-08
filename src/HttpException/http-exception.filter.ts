@@ -17,7 +17,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     response.status(statusCode).json({
-      response: errorMessage,
+      message: errorMessage['message'] || errorMessage,
+      error: errorMessage['error'] || null,
+      status: statusCode,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
