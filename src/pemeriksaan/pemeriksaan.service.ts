@@ -16,7 +16,7 @@ export class PemeriksaanService {
         data: data,
       };
       return res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
