@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   HttpException,
   HttpStatus,
   Post,
+  Query,
   Req,
   Res,
 } from '@nestjs/common';
@@ -21,16 +23,41 @@ export class RekamMedisController {
   ) {}
 
   /** allow for role -> ADMIN and SUPERADMIN **/
-  @Post()
-  rekamMedis(
-    @Body() dto: RekamMedisDto,
+
+  @Get()
+  rekamMedis(@Req() req: Request, @Res() res: Response) {
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      return this.rekamMedisService.getRekamMedis(req, res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
+  }
+
+  @Get('detail')
+  rekamMedisDetail(
+    @Query('no_rawat') no_rawat: string,
+    @Query('no_rm') no_rm: string,
     @Req() req: Request,
     @Res() res: Response,
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
-      return this.rekamMedisService.addRekamMedis(dto, res);
+      return this.rekamMedisService.getRekamMedisDetail(req, res, {
+        no_rawat,
+        no_rm,
+      });
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(

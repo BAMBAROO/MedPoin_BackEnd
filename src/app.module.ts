@@ -42,6 +42,8 @@ export class AppModule implements NestModule {
       { path: '/dashboard/dokter', method: RequestMethod.GET },
       { path: '/dashboard/staf', method: RequestMethod.GET },
       { path: '/dashboard/perawat', method: RequestMethod.GET },
+      { path: '/rekammedis/detail', method: RequestMethod.GET },
+      { path: '/rekammedis', method: RequestMethod.GET },
       { path: '/registrasi', method: RequestMethod.POST },
       { path: '/signup', method: RequestMethod.POST },
       { path: '/signup/dokter', method: RequestMethod.POST },
@@ -50,7 +52,6 @@ export class AppModule implements NestModule {
       { path: '/rawat', method: RequestMethod.POST },
       { path: '/pemeriksaan', method: RequestMethod.POST },
       { path: '/anamnesis', method: RequestMethod.POST },
-      { path: '/rekammedis', method: RequestMethod.POST },
     );
   }
 }

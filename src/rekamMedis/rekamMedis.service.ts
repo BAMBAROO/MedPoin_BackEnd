@@ -1,16 +1,42 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { RekamMedisDto } from './dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import RekamMedisHelperService from '../helper/rekamMedisHelperService.service';
 
 @Injectable()
 export class RekamMedisService {
   constructor(private rekamMedisHelperService: RekamMedisHelperService) {}
 
-  async addRekamMedis(dto: RekamMedisDto, res: Response) {
+  async getRekamMedisDetail(req: Request, res: Response, { no_rawat, no_rm }) {
     try {
-      const data = await this.rekamMedisHelperService.addRekamMedis(dto);
-      return res.status(HttpStatus.OK).json({ data });
+      const data = await this.rekamMedisHelperService.rekamMedisDetail();
+      const response = {
+        error: false,
+        message: 'success',
+        data: { no_rawat, no_rm, data },
+      };
+      return res.status(HttpStatus.OK).json({
+        ...response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async getRekamMedis(req: Request, res: Response) {
+    try {
+      const data = await this.rekamMedisHelperService.rekamMedis();
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        ...response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
     } catch (e) {
       throw e;
     }

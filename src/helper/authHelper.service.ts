@@ -28,7 +28,6 @@ class AuthHelperService {
   async verifyPassword(hashedPassword: string, password: string) {
     try {
       const verified = await this.argon.verify(hashedPassword, password);
-      console.log({ hashedPassword, password });
       if (!verified)
         throw new HttpException(
           {
