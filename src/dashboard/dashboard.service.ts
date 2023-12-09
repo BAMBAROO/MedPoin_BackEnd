@@ -20,7 +20,7 @@ export class DashboardService {
         data: data,
       };
       return res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
@@ -38,7 +38,7 @@ export class DashboardService {
         data: data,
       };
       return res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
@@ -56,7 +56,7 @@ export class DashboardService {
         data: data,
       };
       return res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
@@ -74,7 +74,7 @@ export class DashboardService {
         data: data,
       };
       return res.status(HttpStatus.OK).json({
-        response,
+        ...response,
         timeStamp: new Date().toISOString(),
         path: req.path,
       });
