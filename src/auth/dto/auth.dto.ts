@@ -45,7 +45,7 @@ export class SignUpPerawatDto {
   @IsNotEmpty()
   id: string;
 
-  @IsNotEmpty()
+  @IsString()
   @IsNotEmpty()
   nama: string;
 }
@@ -55,7 +55,7 @@ export class SignUpStafDto {
   @IsNotEmpty()
   id: string;
 
-  @IsNotEmpty()
+  @IsString()
   @IsNotEmpty()
   nama: string;
 }
