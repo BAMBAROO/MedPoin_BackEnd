@@ -1,16 +1,13 @@
 import {
-  Body,
   Controller,
   Get,
   HttpException,
   HttpStatus,
-  Post,
   Query,
   Req,
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { RekamMedisDto } from './dto';
 import { RekamMedisService } from './rekamMedis.service';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
