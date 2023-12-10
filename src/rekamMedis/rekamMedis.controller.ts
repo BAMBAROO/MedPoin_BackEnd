@@ -46,7 +46,6 @@ export class RekamMedisController {
 
   @Get('detail')
   rekamMedisDetail(
-    @Query('no_rawat') no_rawat: string,
     @Query('no_rm') no_rm: string,
     @Req() req: Request,
     @Res() res: Response,
@@ -55,7 +54,6 @@ export class RekamMedisController {
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
       return this.rekamMedisService.getRekamMedisDetail(req, res, {
-        no_rawat,
         no_rm,
       });
     } catch (e) {

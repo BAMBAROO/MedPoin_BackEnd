@@ -24,6 +24,34 @@ class AuthHelperService {
     this.argon = argon;
     this.config = config;
   }
+  async checkIdEmployee(id: string) {
+    try {
+      const nurse = await this.prismaService.perawat.findUnique({
+        where: { id },
+      });
+      const doctor = await this.prismaService.dokter.findUnique({
+        where: { id },
+      });
+      const staff = await this.prismaService.staf.findUnique({
+        where: { id },
+      });
+      if (!nurse && !doctor && !staff) {
+        throw new HttpException(
+          {
+            message: 'There is no doctor, nurse, or staff with that ID',
+            error: 'Not found',
+            status: HttpStatus.NOT_FOUND,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      if (nurse) return nurse;
+      if (doctor) return doctor;
+      if (staff) return staff;
+    } catch (e) {
+      throw e;
+    }
+  }
 
   async verifyPassword(hashedPassword: string, password: string) {
     try {
@@ -58,6 +86,7 @@ class AuthHelperService {
       const result = await this.prismaService.user.findUnique({
         where: { id },
       });
+      const { nama } = await this.checkIdEmployee(id);
       if (!result) {
         throw new HttpException(
           {
@@ -68,6 +97,7 @@ class AuthHelperService {
           HttpStatus.NOT_FOUND,
         );
       }
+      result['nama'] = nama;
       return result;
     } catch (e) {
       throw e;
@@ -76,25 +106,7 @@ class AuthHelperService {
 
   async checkExistId(id: string) {
     try {
-      const nurse = await this.prismaService.perawat.findUnique({
-        where: { id },
-      });
-      const doctor = await this.prismaService.dokter.findUnique({
-        where: { id },
-      });
-      const staff = await this.prismaService.staf.findUnique({
-        where: { id },
-      });
-      if (!nurse && !doctor && !staff) {
-        throw new HttpException(
-          {
-            message: 'No doctor, nurse, or staff with that ID',
-            error: 'Not found',
-            status: HttpStatus.NOT_FOUND,
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
+      await this.checkIdEmployee(id);
       return;
     } catch (e) {
       throw e;

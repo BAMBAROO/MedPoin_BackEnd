@@ -26,7 +26,13 @@ class DashboardHelperService {
           no_rawat: true,
           status: true,
           tgl_antrian: true,
-          dokter_id: true,
+          dokter: {
+            select: {
+              id: true,
+              nama: true,
+              spesialis: true,
+            },
+          },
           pasien: {
             select: {
               no_rm: true,

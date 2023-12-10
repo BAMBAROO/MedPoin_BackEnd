@@ -35,19 +35,18 @@ export class AbilityFactory {
     );
     if (user.role === Role.ADMIN) {
       can(Actions.Manage, 'all');
-      // cannot(Actions.Manage, UserEntity, {
-      //   orgId: { $ne: user.orgId }, // conditions in depth
-      // }).because("it's not on your control");
     } else if (user.role === Role.STAF) {
       can(Actions.Read, 'all');
       can(Actions.Create, 'all');
-      cannot(Actions.Create, Dokter).because("Your're not Admin");
-      cannot(Actions.Create, Perawat).because("Your're not Admin");
-      cannot(Actions.Create, Staf).because("Your're not Admin");
-      cannot(Actions.Create, UserEntity).because("Your're not Admin");
+      cannot(Actions.Create, Dokter).because("Your're not allowed");
+      cannot(Actions.Create, Perawat).because("Your're not allowed");
+      cannot(Actions.Create, Staf).because("Your're not allowed");
+      cannot(Actions.Create, UserEntity).because("Your're not allowed");
     } else {
       can(Actions.Read, 'all');
-      cannot(Actions.Create, 'all').because("Your're not Admin");
+      cannot(Actions.Delete, 'all').because("Your're not allowed");
+      cannot(Actions.Create, 'all').because("Your're not allowed");
+      cannot(Actions.Update, 'all').because("Your're not allowed");
     }
 
     return build({

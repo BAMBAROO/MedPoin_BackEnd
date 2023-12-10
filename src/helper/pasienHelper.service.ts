@@ -91,7 +91,7 @@ class PasienHelperService {
           status_perkawinan: true,
         },
       });
-      if (data.length === 0) {
+      if (!data) {
         throw new HttpException(
           {
             message: 'Data not found',

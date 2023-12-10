@@ -6,13 +6,15 @@ import RekamMedisHelperService from '../helper/rekamMedisHelperService.service';
 export class RekamMedisService {
   constructor(private rekamMedisHelperService: RekamMedisHelperService) {}
 
-  async getRekamMedisDetail(req: Request, res: Response, { no_rawat, no_rm }) {
+  async getRekamMedisDetail(req: Request, res: Response, { no_rm }) {
     try {
-      const data = await this.rekamMedisHelperService.rekamMedisDetail();
+      const data = await this.rekamMedisHelperService.rekamMedisDetail({
+        no_rm,
+      });
       const response = {
         error: false,
         message: 'success',
-        data: { no_rawat, no_rm, data },
+        data,
       };
       return res.status(HttpStatus.OK).json({
         ...response,

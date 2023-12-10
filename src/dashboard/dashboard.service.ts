@@ -1,14 +1,10 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-// import { PrismaService } from '../prisma/prisma.service';
 import { Request, Response } from 'express';
 import DashboardHelperService from '../helper/dashboardHelper.service';
 
 @Injectable()
 export class DashboardService {
-  constructor(
-    // private prismaService: PrismaService,
-    private dashboardHelper: DashboardHelperService,
-  ) {}
+  constructor(private dashboardHelper: DashboardHelperService) {}
 
   async getDataDashboard(req: Request, res: Response) {
     /** on development **/
