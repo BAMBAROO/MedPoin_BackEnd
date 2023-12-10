@@ -93,6 +93,30 @@ class DashboardHelperService {
     }
   }
 
+  async users() {
+    try {
+      const data = await this.prismaService.user.findMany({
+        select: {
+          id: true,
+          role: true,
+        },
+      });
+      if (data.length === 0) {
+        throw new HttpException(
+          {
+            message: 'Staf Not found',
+            error: 'Not found',
+            status: HttpStatus.NOT_FOUND,
+          },
+          HttpStatus.NOT_FOUND,
+        );
+      }
+      return data;
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async perawat() {
     try {
       const data = await this.prismaService.perawat.findMany();

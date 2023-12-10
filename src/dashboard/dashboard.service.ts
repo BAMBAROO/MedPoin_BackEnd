@@ -82,4 +82,22 @@ export class DashboardService {
       throw e;
     }
   }
+
+  async getUsers(req: Request, res: Response) {
+    try {
+      const data = await this.dashboardHelper.users();
+      const response = {
+        error: false,
+        message: 'success',
+        data: data,
+      };
+      return res.status(HttpStatus.OK).json({
+        ...response,
+        timeStamp: new Date().toISOString(),
+        path: req.path,
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
 }
