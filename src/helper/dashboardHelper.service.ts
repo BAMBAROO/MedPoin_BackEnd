@@ -43,19 +43,7 @@ class DashboardHelperService {
           },
         },
       });
-
-      const patientToday = dateFiltering(data);
-      if (data?.length === 0 || patientToday?.length === 0) {
-        throw new HttpException(
-          {
-            message: 'Data not found',
-            error: 'Not found',
-            status: HttpStatus.NOT_FOUND,
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      return patientToday;
+      return dateFiltering(data);
     } catch (e) {
       throw e;
     }

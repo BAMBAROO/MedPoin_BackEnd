@@ -3,20 +3,20 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RawatDto } from '../rawat/dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+function getNoRawat(lastNoRawat: string) {
+  const numberRawat: number =
+    lastNoRawat !== null ? parseInt(lastNoRawat.split('-')[1]) + 1 : 1;
+  return `rw-${numberRawat.toString().padStart(3, '0')}`;
+}
+
+function getNoAntrian(lastDate: number, lastAntrian: number) {
+  const today: number = new Date().getDate();
+  return today === lastDate ? lastAntrian + 1 : 1;
+}
+
 @Injectable()
 class RawatHelperService {
   constructor(private prismaService: PrismaService) {}
-
-  getNoRawat(lastNoRawat: string) {
-    const numberRawat: number =
-      lastNoRawat !== null ? parseInt(lastNoRawat.split('-')[1]) + 1 : 1;
-    return `rw-${numberRawat.toString().padStart(3, '0')}`;
-  }
-
-  getNoAntrian(lastDate: number, lastAntrian: number) {
-    const today: number = new Date().getDate();
-    return today === lastDate ? lastAntrian + 1 : 1;
-  }
 
   async getDataToday() {
     const result = await this.prismaService.antrian.findFirst({
@@ -32,8 +32,8 @@ class RawatHelperService {
     const no_antrian: number =
       result === null
         ? 1
-        : this.getNoAntrian(result.tgl_antrian.getDate(), result.no_antrian);
-    const no_rawat = this.getNoRawat(rawat._max.no_rawat);
+        : getNoAntrian(result.tgl_antrian.getDate(), result.no_antrian);
+    const no_rawat = getNoRawat(rawat._max.no_rawat);
     return { no_rawat, no_antrian };
   }
 

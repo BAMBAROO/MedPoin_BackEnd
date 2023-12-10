@@ -11,6 +11,35 @@ import {
   SignUpStafDto,
 } from 'src/auth/dto';
 
+async function checkIdEmployee(id: string) {
+  try {
+    const nurse = await this.prismaService.perawat.findUnique({
+      where: { id },
+    });
+    const doctor = await this.prismaService.dokter.findUnique({
+      where: { id },
+    });
+    const staff = await this.prismaService.staf.findUnique({
+      where: { id },
+    });
+    if (!nurse && !doctor && !staff) {
+      throw new HttpException(
+        {
+          message: 'There is no doctor, nurse, or staff with that ID',
+          error: 'Not found',
+          status: HttpStatus.NOT_FOUND,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (nurse) return nurse;
+    if (doctor) return doctor;
+    if (staff) return staff;
+  } catch (e) {
+    throw e;
+  }
+}
+
 @Injectable()
 class AuthHelperService {
   config: ConfigService;
@@ -23,34 +52,6 @@ class AuthHelperService {
   ) {
     this.argon = argon;
     this.config = config;
-  }
-  async checkIdEmployee(id: string) {
-    try {
-      const nurse = await this.prismaService.perawat.findUnique({
-        where: { id },
-      });
-      const doctor = await this.prismaService.dokter.findUnique({
-        where: { id },
-      });
-      const staff = await this.prismaService.staf.findUnique({
-        where: { id },
-      });
-      if (!nurse && !doctor && !staff) {
-        throw new HttpException(
-          {
-            message: 'There is no doctor, nurse, or staff with that ID',
-            error: 'Not found',
-            status: HttpStatus.NOT_FOUND,
-          },
-          HttpStatus.NOT_FOUND,
-        );
-      }
-      if (nurse) return nurse;
-      if (doctor) return doctor;
-      if (staff) return staff;
-    } catch (e) {
-      throw e;
-    }
   }
 
   async verifyPassword(hashedPassword: string, password: string) {
@@ -86,7 +87,7 @@ class AuthHelperService {
       const result = await this.prismaService.user.findUnique({
         where: { id },
       });
-      const { nama } = await this.checkIdEmployee(id);
+      const { nama } = await checkIdEmployee(id);
       if (!result) {
         throw new HttpException(
           {
@@ -106,7 +107,7 @@ class AuthHelperService {
 
   async checkExistId(id: string) {
     try {
-      await this.checkIdEmployee(id);
+      await checkIdEmployee(id);
       return;
     } catch (e) {
       throw e;

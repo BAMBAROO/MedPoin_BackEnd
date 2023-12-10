@@ -7,9 +7,11 @@ export class DashboardService {
   constructor(private dashboardHelper: DashboardHelperService) {}
 
   async getDataDashboard(req: Request, res: Response) {
-    /** on development **/
     try {
       const data = await this.dashboardHelper.dashboard();
+      if (data?.length === 0) {
+        return res.status(HttpStatus.NO_CONTENT);
+      }
       const response = {
         error: false,
         message: 'success',

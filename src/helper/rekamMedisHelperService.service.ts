@@ -1,61 +1,60 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
+function getKunjungan(pasien) {
+  const data = [];
+  pasien.map((result) => {
+    const pasien = {
+      no_rm: result.no_rm,
+      name: result.name,
+      kunjungan_terakhir: result.antrian[result.antrian.length - 1].tgl_antrian,
+      jumlah_kunjungan: result.antrian.length,
+    };
+    data.push(pasien);
+  });
+  return data;
+}
+
+function riwayatRekammedis(data) {
+  const result = {
+    biodata: {
+      no_rm: data.no_rm,
+      name: data.name,
+      alamat_lengkap: data.alamat_lengkap,
+      no_hp: data.no_hp,
+      tgl_daftar: data.tgl_daftar,
+      no_ktp: data.no_ktp,
+      no_bpjs: data.no_bpjs,
+      no_hp_keluarga: data.no_hp_keluarga,
+      gol_darah: data.gol_darah,
+      tempat_lahir: data.tempat_lahir,
+      tanggal_lahir: data.tanggal_lahir,
+      status_perkawinan: data.status_perkawinan,
+    },
+    riwayat: [],
+  };
+  data.antrian.map((data) => {
+    const { no_rawat, tgl_antrian, pemeriksaan, dokter } = data;
+    const riwayat = {
+      no_rawat,
+      tgl_rawat: tgl_antrian,
+      dokter: {
+        id: dokter?.id || null,
+        dokter: dokter?.nama || null,
+        spesialis: dokter?.spesialis || null,
+      },
+      resep_obat: pemeriksaan[0]?.resep_obat || null,
+      diagnosis: pemeriksaan[0]?.diagnosis || null,
+    };
+    result.riwayat.push(riwayat);
+  });
+
+  return result;
+}
+
 @Injectable()
 class rekamMedisHelperService {
   constructor(private prismaService: PrismaService) {}
-
-  getKunjungan(pasien) {
-    const data = [];
-    pasien.map((result) => {
-      const pasien = {
-        no_rm: result.no_rm,
-        name: result.name,
-        kunjungan_terakhir:
-          result.antrian[result.antrian.length - 1].tgl_antrian,
-        jumlah_kunjungan: result.antrian.length,
-      };
-      data.push(pasien);
-    });
-    return data;
-  }
-
-  riwayatRekammedis(data) {
-    const result = {
-      biodata: {
-        no_rm: data.no_rm,
-        name: data.name,
-        alamat_lengkap: data.alamat_lengkap,
-        no_hp: data.no_hp,
-        tgl_daftar: data.tgl_daftar,
-        no_ktp: data.no_ktp,
-        no_bpjs: data.no_bpjs,
-        no_hp_keluarga: data.no_hp_keluarga,
-        gol_darah: data.gol_darah,
-        tempat_lahir: data.tempat_lahir,
-        tanggal_lahir: data.tanggal_lahir,
-        status_perkawinan: data.status_perkawinan,
-      },
-      riwayat: [],
-    };
-    data.antrian.map((data) => {
-      const { no_rawat, tgl_antrian, pemeriksaan, dokter } = data;
-      const riwayat = {
-        no_rawat,
-        tgl_rawat: tgl_antrian,
-        dokter: {
-          id: dokter?.id || null,
-          dokter: dokter?.nama || null,
-          spesialis: dokter?.spesialis || null,
-        },
-        resep_obat: pemeriksaan[0]?.resep_obat || null,
-        diagnosis: pemeriksaan[0]?.diagnosis || null,
-      };
-      result.riwayat.push(riwayat);
-    });
-
-    return result;
-  }
 
   async rekamMedis() {
     try {
@@ -80,7 +79,7 @@ class rekamMedisHelperService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return this.getKunjungan(pasien);
+      return getKunjungan(pasien);
     } catch (e) {
       throw e;
     }
@@ -137,7 +136,7 @@ class rekamMedisHelperService {
           HttpStatus.NOT_FOUND,
         );
       }
-      return this.riwayatRekammedis(result);
+      return riwayatRekammedis(result);
     } catch (e) {
       throw e;
     }

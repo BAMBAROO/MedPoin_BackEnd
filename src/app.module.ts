@@ -32,27 +32,27 @@ import { RekamMedisModule } from './rekamMedis/rekamMedis.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(VerifyToken).forRoutes(
-      /** on development **/
-
-      { path: '/registrasi', method: RequestMethod.GET },
-      { path: '/dashboard', method: RequestMethod.GET },
-      { path: '/pasien/rm', method: RequestMethod.GET },
-      { path: '/pasien', method: RequestMethod.GET },
-      { path: '/dashboard/dokter', method: RequestMethod.GET },
-      { path: '/dashboard/users', method: RequestMethod.GET },
-      { path: '/dashboard/staf', method: RequestMethod.GET },
-      { path: '/dashboard/perawat', method: RequestMethod.GET },
-      { path: '/rekammedis/detail', method: RequestMethod.GET },
-      { path: '/rekammedis', method: RequestMethod.GET },
-      { path: '/pasien/registrasi', method: RequestMethod.POST },
-      { path: '/signup', method: RequestMethod.POST },
-      { path: '/signup/dokter', method: RequestMethod.POST },
-      { path: '/signup/perawat', method: RequestMethod.POST },
-      { path: '/signup/staf', method: RequestMethod.POST },
-      { path: '/rawat', method: RequestMethod.POST },
-      { path: '/pemeriksaan', method: RequestMethod.POST },
-      { path: '/anamnesis', method: RequestMethod.POST },
-    );
+    consumer
+      .apply(VerifyToken)
+      .forRoutes(
+        { path: '/registrasi', method: RequestMethod.GET },
+        { path: '/dashboard', method: RequestMethod.GET },
+        { path: '/pasien/rm', method: RequestMethod.GET },
+        { path: '/pasien', method: RequestMethod.GET },
+        { path: '/dashboard/dokter', method: RequestMethod.GET },
+        { path: '/dashboard/users', method: RequestMethod.GET },
+        { path: '/dashboard/staf', method: RequestMethod.GET },
+        { path: '/dashboard/perawat', method: RequestMethod.GET },
+        { path: '/rekammedis/detail', method: RequestMethod.GET },
+        { path: '/rekammedis', method: RequestMethod.GET },
+        { path: '/pasien/registrasi', method: RequestMethod.POST },
+        { path: '/signup', method: RequestMethod.POST },
+        { path: '/signup/dokter', method: RequestMethod.POST },
+        { path: '/signup/perawat', method: RequestMethod.POST },
+        { path: '/signup/staf', method: RequestMethod.POST },
+        { path: '/rawat', method: RequestMethod.POST },
+        { path: '/pemeriksaan', method: RequestMethod.POST },
+        { path: '/anamnesis', method: RequestMethod.POST },
+      );
   }
 }

@@ -6,7 +6,6 @@ import { HttpExceptionFilter } from './HttpException/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // const { httpAdapter } = app.get(HttpAdapterHost);
   app.use(CookieParser());
   app.enableCors({
     origin: 'http://localhost:9100',
