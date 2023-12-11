@@ -64,11 +64,43 @@ class AnamnesisHelperService {
 
   async getAnamnesis(no_rawat) {
     try {
-      return await this.prismaService.anamnesis.findUnique({
+      const result = await this.prismaService.anamnesis.findUnique({
         where: {
           no_rawat,
         },
+        select: {
+          no_rm: true,
+          no_rawat: true,
+          dokter_id: true,
+          perawat_id: true,
+          tinggi: true,
+          berat: true,
+          suhu: true,
+          saturasi: true,
+          tensi: true,
+          no_anamnesis: true,
+          pasien: {
+            select: {
+              tanggal_lahir: true,
+              name: true,
+            },
+          },
+        },
       });
+      return {
+        no_rm: result.no_rm,
+        no_rawat: result.no_rawat,
+        no_anamnesis: result.no_anamnesis,
+        dokter_id: result.dokter_id,
+        perawat_id: result.perawat_id,
+        tinggi: result.tinggi,
+        berat: result.berat,
+        suhu: result.suhu,
+        tensi: result.tensi,
+        saturasi: result.saturasi,
+        name: result.pasien.name,
+        tanggal_lahir: result.pasien.tanggal_lahir,
+      };
     } catch (e) {
       throw e;
     }
