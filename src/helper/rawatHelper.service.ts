@@ -6,7 +6,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 function getToday() {
   const javascriptDate = new Date();
   const date = javascriptDate.getDate();
-  const month = javascriptDate.getMonth();
+  const month = javascriptDate.getMonth() + 1;
   const year = javascriptDate.getFullYear();
   return { date, month, year };
 }
@@ -15,7 +15,7 @@ function getNoRawat(lastNoRawat: string) {
   const { date, month, year } = getToday();
   const numberRawat: number =
     lastNoRawat !== null ? parseInt(lastNoRawat.split('/')[4]) + 1 : 1;
-  return `RJ/${date}/${month}/${year}/${numberRawat
+  return `RJ/${year}/${month}/${date}/${numberRawat
     .toString()
     .padStart(3, '0')}`;
 }
