@@ -14,6 +14,7 @@ import { RawatModule } from './rawat/rawat.module';
 import { AnamnesisModule } from './anamnesis/anamnesis.module';
 import { PemeriksaanModule } from './pemeriksaan/pemeriksaan.module';
 import { RekamMedisModule } from './rekamMedis/rekamMedis.module';
+import { IcdModule } from './icd/icd.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RekamMedisModule } from './rekamMedis/rekamMedis.module';
     PemeriksaanModule,
     PrismaModule,
     RekamMedisModule,
+    IcdModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -44,6 +46,8 @@ export class AppModule implements NestModule {
         { path: '/dashboard/staf', method: RequestMethod.GET },
         { path: '/dashboard/perawat', method: RequestMethod.GET },
         { path: '/rekammedis/detail', method: RequestMethod.GET },
+        { path: '/icd10', method: RequestMethod.GET },
+        { path: '/icd9', method: RequestMethod.GET },
         { path: '/rekammedis', method: RequestMethod.GET },
         { path: '/pasien/registrasi', method: RequestMethod.POST },
         { path: '/signup', method: RequestMethod.POST },
