@@ -3,7 +3,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientValidationError,
+} from '@prisma/client/runtime/library';
 import {
   SignUpDokterDto,
   SignUpDto,
@@ -258,6 +261,16 @@ class AuthHelperService {
         },
       });
     } catch (e) {
+      if (e instanceof PrismaClientValidationError) {
+        throw new HttpException(
+          {
+            message: 'Invalid data provided',
+            error: 'Unprocessable',
+            status: HttpStatus.UNPROCESSABLE_ENTITY,
+          },
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
       throw e;
     }
   }
