@@ -10,7 +10,7 @@ export class DashboardService {
     try {
       const data = await this.dashboardHelper.dashboard();
       if (data?.length === 0) {
-        return res.status(HttpStatus.NO_CONTENT);
+        return res.sendStatus(HttpStatus.NO_CONTENT);
       }
       const response = {
         error: false,

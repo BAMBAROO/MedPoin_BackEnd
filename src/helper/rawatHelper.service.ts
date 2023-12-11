@@ -3,15 +3,26 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RawatDto } from '../rawat/dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+function getToday() {
+  const javascriptDate = new Date();
+  const date = javascriptDate.getDate();
+  const month = javascriptDate.getMonth();
+  const year = javascriptDate.getFullYear();
+  return { date, month, year };
+}
+
 function getNoRawat(lastNoRawat: string) {
+  const { date, month, year } = getToday();
   const numberRawat: number =
-    lastNoRawat !== null ? parseInt(lastNoRawat.split('-')[1]) + 1 : 1;
-  return `rw-${numberRawat.toString().padStart(3, '0')}`;
+    lastNoRawat !== null ? parseInt(lastNoRawat.split('/')[4]) + 1 : 1;
+  return `RJ/${date}/${month}/${year}/${numberRawat
+    .toString()
+    .padStart(3, '0')}`;
 }
 
 function getNoAntrian(lastDate: number, lastAntrian: number) {
-  const today: number = new Date().getDate();
-  return today === lastDate ? lastAntrian + 1 : 1;
+  const { date } = getToday();
+  return date === lastDate ? lastAntrian + 1 : 1;
 }
 
 @Injectable()

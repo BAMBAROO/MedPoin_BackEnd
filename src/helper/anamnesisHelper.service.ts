@@ -61,6 +61,18 @@ class AnamnesisHelperService {
       throw e;
     }
   }
+
+  async getAnamnesis(no_rawat) {
+    try {
+      return await this.prismaService.anamnesis.findUnique({
+        where: {
+          no_rawat,
+        },
+      });
+    } catch (e) {
+      throw e;
+    }
+  }
 }
 
 export default AnamnesisHelperService;

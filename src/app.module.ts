@@ -49,6 +49,7 @@ export class AppModule implements NestModule {
         { path: '/icd10', method: RequestMethod.GET },
         { path: '/icd9', method: RequestMethod.GET },
         { path: '/rekammedis', method: RequestMethod.GET },
+        { path: '/anamnesis', method: RequestMethod.GET },
         { path: '/pasien/registrasi', method: RequestMethod.POST },
         { path: '/signup', method: RequestMethod.POST },
         { path: '/signup/dokter', method: RequestMethod.POST },
