@@ -40,11 +40,13 @@ function riwayatRekammedis(data) {
       tgl_rawat: tgl_antrian,
       dokter: {
         id: dokter?.id || null,
-        dokter: dokter?.nama || null,
+        nama: dokter?.nama || null,
         spesialis: dokter?.spesialis || null,
       },
       resep_obat: pemeriksaan[0]?.resep_obat || null,
       diagnosis: pemeriksaan[0]?.diagnosis || null,
+      keluhan: pemeriksaan[0]?.keluhan || null,
+      tindakan: pemeriksaan[0]?.tindakan || null,
     };
     result.riwayat.push(riwayat);
   });
@@ -110,6 +112,8 @@ class rekamMedisHelperService {
                 select: {
                   resep_obat: true,
                   diagnosis: true,
+                  tindakan: true,
+                  keluhan: true,
                 },
               },
               dokter: {
