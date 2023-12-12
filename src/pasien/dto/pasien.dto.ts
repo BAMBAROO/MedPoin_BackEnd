@@ -23,7 +23,6 @@ export class PasienDto {
 
   @IsNotEmpty()
   @IsString()
-  @IsDate()
   tanggal_lahir: string;
 
   @IsNotEmpty()

@@ -87,6 +87,17 @@ class AnamnesisHelperService {
           },
         },
       });
+      if (!result) {
+        throw new HttpException(
+          {
+            message: 'Anamnesis data not available yet',
+            error: 'Unprocessable Entity',
+            status: HttpStatus.UNPROCESSABLE_ENTITY,
+          },
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
+      console.log({ result });
       return {
         no_rm: result.no_rm,
         no_rawat: result.no_rawat,
