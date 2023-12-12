@@ -148,9 +148,8 @@ export class AuthService {
     }
   }
 
-  async refreshToken(req: Request, res: Response) {
+  async refreshToken(refreshToken: string, req: Request, res: Response) {
     try {
-      const refreshToken = req.cookies['refreshToken'];
       const token = await this.authHelper.findRefreshToken(refreshToken);
       if (!token) throw ForbiddenException;
       const { id, role } = await this.authHelper.verifyRefreshToken(

@@ -20,7 +20,7 @@ import {
 } from './dto';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
 import { ForbiddenError } from '@casl/ability';
-import { Dokter, Staf } from '../ability/entities/rules.entitiy';
+import { Dokter, Perawat, Staf } from '../ability/entities/rules.entitiy';
 
 @Controller()
 export class AuthController {
@@ -84,7 +84,22 @@ export class AuthController {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    return this.authService.signUpPerawat(dto, req, res);
+    const ability = this.abilityFactory.defineAbility(req['user']);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Perawat);
+      return this.authService.signUpPerawat(dto, req, res);
+    } catch (e) {
+      if (e instanceof ForbiddenError) {
+        throw new HttpException(
+          {
+            message: e.message,
+            error: 'Forbidden',
+            status: HttpStatus.FORBIDDEN,
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+    }
   }
 
   @Post('signup/staf')
@@ -126,6 +141,7 @@ export class AuthController {
   /** free endpoint **/
   @Get('token')
   refreshToken(@Req() req: Request, @Res() res: Response) {
-    return this.authService.refreshToken(req, res);
+    const refreshToken: string = req.cookies['refreshToken'];
+    return this.authService.refreshToken(refreshToken, req, res);
   }
 }

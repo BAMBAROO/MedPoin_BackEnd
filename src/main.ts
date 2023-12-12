@@ -15,7 +15,7 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // hanya properti yang telah didefinisikan dalam DTO (Data Transfer Object) yang akan diterima dari data yand dimasukan.
+      whitelist: true, // hanya properti yang telah didefinisikan dalam DTO (Data Transfer Object) yang akan diterima dari data yang dimasukan.
     }),
   );
   await app.listen(5000);
