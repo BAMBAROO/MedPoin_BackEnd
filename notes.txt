@@ -1,10 +1,20 @@
+Setup:
+1. npm install
+2. create database <nama_database> pada mysql local computer
+3. ganti .env DATABASE_URL="mysql://<user>:<password>@localhost:3306/<nama_database>"
+4. npx prisma push
+5. npx prisma migrate dev --name first-migrate
+6. npx prisma generate
+7. npm run start:dev
+
+Hanya catatan:
 npm install -D prisma
 npm install @prisma/client
-npx prisma init --datasource-provider postgresql
+npx prisma init --datasource-provider mysql
 npx prisma migrate dev --name migration-name
 npx prisma generate
 
-Rangkuman
+Rangkuman:
 dto -> untuk mengecek/validasi data form yang dikirim dari frontend (schema).
 class-validator -> untuk mengecek string, number, not empty pada schema dto.
 service -> bagian yang berhubungan ke database untuk melakukan CRUD.
@@ -18,16 +28,52 @@ providers -> logika bisnis atau yang berbau integrasi ke database.
 controllers -> controller menangani http request seperti get, post, delete, update dan data form.
 
 Endpoint:
-'/' :GET -> data dashbooard
-'/dokter' :GET -> list dokter
-'/perawat' :GET -> list perawat
-'/registrasi' :POST -> registrasi pasien
-'/signup' :POST -> daftar untuk master
+'/signup/dokter' :POST -> daftar untuk dokter
+---> membutuhkan body {id: string, nama: string, spesialis, string}
+
+'/signup/perawat' :POST -> daftar untuk perawat
+---> membutuhkan body {id: string, nama: string}
+
+'/signup/staf' :POST -> daftar untuk staf
+---> membutuhkan body {id: string, nama: string}
+
+'/signup' :POST -> daftar untuk membuat akun untuk dokter, perawat, atau staf
+---> membutuhkan body {id: string, password: string, role, string}
+
 '/signin' :POST -> masuk untuk semua user
+---> membutuhkan body {id: string, password: string}
+---> mengembalikan accessToken yang akan digunakan pada Header Authorization `Bearer ${token}` setiap endpoint selanjutnya
+
 '/signout' :DELETE -> keluar akun
-'/rawat' :GET -> nomor remak medis terakhir
-'/rawat' :POST -> daftar rawat
-'/anamnesis' :POST -> daftar anamnesis
-'/rekammedis' :POST -> daftar rekam medis
-'/pemeriksaan' :POST -> add pemeriksaan dari antrian
-... on development
+
+'/token' :GET -> mendapatkan accessToken yang baru
+
+(membutuhkan token) '/dashboard' :GET -> data dashbooard untuk pasien hari ini
+
+(membutuhkan token) '/dashboard/dokter' :GET -> list dokter
+
+(membutuhkan token) '/dashboard/perawat' :GET -> list perawat
+
+(membutuhkan token) '/dashboard/staf' :GET -> list staf/admin
+
+(membutuhkan token) '/pasien/registrasi' :POST -> registrasi pasien
+---> membutuhkan body {no_rm, name, no_ktp, no_bpjs, tempat_lahir, tanggal_lahir, jenis_kelamin, gol_darah, no_hp, nama_keluarga, no_hp_keluarga, alamat_lengkap, status_perkawinan}
+
+(membutuhkan token) '/pasien' :GET -> mendapatkan data seluruh pasien yang terdaftar
+
+(membutuhkan token) '/pasien/rm' :GET -> mendapatkan nomor Rekam Medis terakhir
+
+(membutuhkan token) '/rawat' :POST -> mendaftarkan pasien kedalam antrian rawat bedasarkan no_rm
+---> membutuhkan body {no_rm: string, dokter_id: string}
+
+(membutuhkan token) '/anamnesis' :POST -> mendaftarkan anamnesis pada pasien antrian rawat
+---> membutuhkan body {nama, no_rm, no_rawat, dokter_id, perawat_id, berat, suhu, tinggi, saturasi, tensi}
+
+(membutuhkan token) '/anamnesis?no_rawat=${no_rawat}' :GET -> untuk mendapatkan detail dari pasien yang sudah dianamnesis
+
+(membutuhkan token) '/pemeriksaan' :POST -> memberikan diagnosis dan tindakan pada pasien antrian rawat
+---> membutuhkan body {no_rm, no_rawat, dokter_id, keluhan, tindakan, diagnosis, resep_obat}
+
+(membutuhkan token) '/rekammedis' :GET -> mendapatkan rekam medis pada pasien
+
+(membutuhkan token) '/rekammedis/detail?no_rm=RM-00001' :GET -> mendapatkan detail rekam medis pada pasien

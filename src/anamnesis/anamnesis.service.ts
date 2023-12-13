@@ -8,7 +8,6 @@ export class AnamnesisService {
   constructor(private anamnesisHelperService: AnamnesisHelperService) {}
 
   async addAnamnesis(dto: AnamnesisDto, req: Request, res: Response) {
-    /** must using try and catch **/
     try {
       const data = await this.anamnesisHelperService.addAnamnesis(dto);
       const response = {
