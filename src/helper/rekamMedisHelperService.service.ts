@@ -4,11 +4,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 function getKunjungan(pasien) {
   const data = [];
   pasien.map((result) => {
+    console.log(result);
     const pasien = {
       no_rm: result.no_rm,
       name: result.name,
-      kunjungan_terakhir: result.antrian[result.antrian.length - 1].tgl_antrian,
-      jumlah_kunjungan: result.antrian.length,
+      kunjungan_terakhir:
+        result.antrian[result.antrian.length - 1]?.tgl_antrian || null,
+      jumlah_kunjungan: result.antrian?.length,
     };
     data.push(pasien);
   });
