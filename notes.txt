@@ -2,7 +2,7 @@ Setup:
 1. npm install
 2. create database <nama_database> pada mysql local computer
 3. ganti .env DATABASE_URL="mysql://<user>:<password>@localhost:3306/<nama_database>"
-4. npx prisma push
+4. npx prisma db push (kalau database masih kosong) || npx prisma db pull (kalau database sudah terbentuk)
 5. npx prisma migrate dev --name first-migrate
 6. npx prisma generate
 7. npm run start:dev
