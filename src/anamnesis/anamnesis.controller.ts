@@ -14,7 +14,7 @@ import { AnamnesisDto } from './dto';
 import { AnamnesisService } from './anamnesis.service';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
-import { Staf } from '../ability/entities/rules.entitiy';
+import { Anamnesis, Staf } from '../ability/entities/rules.entitiy';
 
 @Controller('anamnesis')
 export class AnamnesisController {
@@ -32,7 +32,7 @@ export class AnamnesisController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Anamnesis);
       return this.anamnesisService.addAnamnesis(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {

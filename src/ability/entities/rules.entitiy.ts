@@ -14,3 +14,15 @@ export class Staf {
   role: Role.STAF;
   name: string;
 }
+
+export class Dashboard {}
+
+export class Pasien {}
+
+export class Rawat {}
+
+export class Anamnesis {}
+
+export class Pemeriksaan {}
+
+export class RekamMedis {}

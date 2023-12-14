@@ -10,6 +10,7 @@ import { DashboardService } from './dashboard.service';
 import { Request, Response } from 'express';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
+import { Dashboard } from '../ability/entities/rules.entitiy';
 
 @Controller('dashboard')
 export class DashboardController {
@@ -23,7 +24,7 @@ export class DashboardController {
   dashboard(@Req() req: Request, @Res() res: Response) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, Dashboard);
       return this.dashboardService.getDataDashboard(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {

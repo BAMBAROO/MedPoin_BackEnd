@@ -13,7 +13,7 @@ import { RawatDto } from './dto';
 import { RawatService } from './rawat.service';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
-import { Staf } from '../ability/entities/rules.entitiy';
+import { Rawat, Staf } from '../ability/entities/rules.entitiy';
 
 @Controller('rawat')
 export class RawatController {
@@ -31,7 +31,7 @@ export class RawatController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Rawat);
       return this.rawatService.registrasiRawat(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {

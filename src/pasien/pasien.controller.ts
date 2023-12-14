@@ -13,6 +13,7 @@ import { PasienDto } from './dto';
 import { Request, Response } from 'express';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
+import { Pasien } from '../ability/entities/rules.entitiy';
 
 @Controller('pasien')
 export class PasienController {
@@ -30,7 +31,7 @@ export class PasienController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Pasien);
       return this.pasienService.addPasien(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
@@ -50,7 +51,7 @@ export class PasienController {
   all(@Req() req: Request, @Res() res: Response) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, Pasien);
       return this.pasienService.all(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
