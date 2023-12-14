@@ -14,7 +14,7 @@ import { AnamnesisDto } from './dto';
 import { AnamnesisService } from './anamnesis.service';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
-import { Anamnesis, Staf } from '../ability/entities/rules.entitiy';
+import { Anamnesis } from '../ability/entities/rules.entitiy';
 
 @Controller('anamnesis')
 export class AnamnesisController {
