@@ -66,11 +66,11 @@ class RawatHelperService {
       if (e instanceof PrismaClientKnownRequestError) {
         throw new HttpException(
           {
-            message: 'no_rm not registered',
+            message: 'Failed to create new data. Required data not found.',
             error: 'Bad request',
-            status: HttpStatus.BAD_REQUEST,
+            status: HttpStatus.CONFLICT,
           },
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.CONFLICT,
         );
       }
       throw e;

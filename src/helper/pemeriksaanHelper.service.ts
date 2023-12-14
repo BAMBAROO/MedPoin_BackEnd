@@ -42,7 +42,7 @@ class PemeriksaanHelperService {
       if (e instanceof PrismaClientKnownRequestError) {
         throw new HttpException(
           {
-            message: 'Invalid Data',
+            message: 'Failed to create new data. Required data not found.',
             error: 'Conflict',
             status: HttpStatus.CONFLICT,
           },
