@@ -8,7 +8,17 @@ import {
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from '../auth/entities/user.entity';
 import { Role } from '../auth/entities/user.enum';
-import { Dokter, Perawat, Staf } from './entities/rules.entitiy';
+import {
+  Anamnesis,
+  Dashboard,
+  Dokter,
+  Pasien,
+  Pemeriksaan,
+  Perawat,
+  Rawat,
+  RekamMedis,
+  Staf,
+} from './entities/rules.entitiy';
 
 export const enum Actions {
   Manage = 'manage' /** wildcard **/,
@@ -22,7 +32,16 @@ export const enum Actions {
 
 export type Subject =
   | InferSubjects<
-      typeof UserEntity | typeof Dokter | typeof Perawat | typeof Staf
+      | typeof UserEntity
+      | typeof Dokter
+      | typeof Perawat
+      | typeof Staf
+      | typeof Dashboard
+      | typeof Pasien
+      | typeof Rawat
+      | typeof Anamnesis
+      | typeof Pemeriksaan
+      | typeof RekamMedis
     >
   | 'all';
 type AppAbility = MongoAbility<[Actions, Subject]>;
@@ -37,7 +56,39 @@ export class AbilityFactory {
       can(Actions.Manage, 'all');
     } else if (user.role === Role.STAF) {
       can(Actions.Read, 'all');
-      can(Actions.Create, 'all');
+      can(Actions.Create, Dashboard);
+      can(Actions.Create, Pasien);
+      can(Actions.Create, Rawat);
+      can(Actions.Create, Anamnesis);
+      can(Actions.Create, Pemeriksaan);
+      can(Actions.Create, RekamMedis);
+      can(Actions.Read, RekamMedis);
+      cannot(Actions.Create, Dokter).because("Your're not allowed");
+      cannot(Actions.Create, Perawat).because("Your're not allowed");
+      cannot(Actions.Create, Staf).because("Your're not allowed");
+      cannot(Actions.Create, UserEntity).because("Your're not allowed");
+    } else if (user.role === Role.DOKTER) {
+      can(Actions.Read, 'all');
+      can(Actions.Create, Dashboard);
+      can(Actions.Create, Pasien);
+      can(Actions.Create, Rawat);
+      can(Actions.Create, Anamnesis);
+      can(Actions.Create, Pemeriksaan);
+      can(Actions.Create, RekamMedis);
+      can(Actions.Read, RekamMedis);
+      cannot(Actions.Create, Dokter).because("Your're not allowed");
+      cannot(Actions.Create, Perawat).because("Your're not allowed");
+      cannot(Actions.Create, Staf).because("Your're not allowed");
+      cannot(Actions.Create, UserEntity).because("Your're not allowed");
+    } else if (user.role === Role.PERAWAT) {
+      can(Actions.Read, 'all');
+      can(Actions.Create, Dashboard);
+      cannot(Actions.Create, Pasien).because("Your're not allowed");
+      can(Actions.Create, Rawat);
+      can(Actions.Create, Anamnesis);
+      cannot(Actions.Read, RekamMedis);
+      cannot(Actions.Create, Pemeriksaan).because("Your're not allowed");
+      cannot(Actions.Create, RekamMedis).because("Your're not allowed");
       cannot(Actions.Create, Dokter).because("Your're not allowed");
       cannot(Actions.Create, Perawat).because("Your're not allowed");
       cannot(Actions.Create, Staf).because("Your're not allowed");
