@@ -13,12 +13,18 @@ import {
 } from './dto';
 import { Request, Response } from 'express';
 import AuthHelperService from '../helper/authHelper.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  config: ConfigService;
+
   constructor(
     private authHelper: AuthHelperService /** for access to databases **/,
-  ) {}
+    config: ConfigService,
+  ) {
+    this.config = config;
+  }
 
   async signUp(dto: SignUpDto, req: Request, res: Response) {
     dto.password = await this.authHelper.hashingPassword(dto.password);
@@ -82,15 +88,18 @@ export class AuthService {
   async signin(dto: SignInDto, req: Request, res: Response) {
     try {
       const user =
-        dto.id === 'superadmin'
+        dto.id === this.config.get<string>('SUPERADMIN_ID')
           ? {
-              nama: 'superadmin',
-              id: 'superadmin',
+              nama: this.config.get<string>('SUPERADMIN_ID'),
+              id: this.config.get<string>('SUPERADMIN_ID'),
               role: 'admin',
               password: dto.password,
             }
           : await this.authHelper.findUserById(dto.id);
-      if (dto.id !== 'superadmin' || dto.password !== 'nimdarepus')
+      if (
+        dto.id !== this.config.get<string>('SUPERADMIN_ID') ||
+        dto.password !== this.config.get<string>('SUPERADMIN_PASS')
+      )
         await this.authHelper.verifyPassword(user.password, dto.password);
       const payload = { id: user.id, role: user.role };
       const accessToken = await this.authHelper.createAccessToken(payload);
