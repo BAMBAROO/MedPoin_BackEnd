@@ -15,7 +15,7 @@ import { AbilityFactory, Actions } from '../ability/ability.factory';
 @Controller()
 export class IcdController {
   constructor(
-    private rekamMedisService: IcdService,
+    private icdService: IcdService,
     private abilityFactory: AbilityFactory,
   ) {}
 
@@ -26,7 +26,7 @@ export class IcdController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.rekamMedisService.icd9(req, res);
+      return this.icdService.icd9(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
@@ -46,7 +46,7 @@ export class IcdController {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
-      return this.rekamMedisService.icd10(req, res);
+      return this.icdService.icd10(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
         throw new HttpException(
