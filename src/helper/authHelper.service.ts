@@ -292,7 +292,7 @@ class AuthHelperService {
       { id, role },
       {
         secret: this.config.get<string>('SECRET_KEY_ACCESS'),
-        expiresIn: '1d',
+        expiresIn: '40s',
       },
     );
   }
