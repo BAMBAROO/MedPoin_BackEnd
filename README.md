@@ -1,9 +1,25 @@
-Raw readme
-
-
 # Medpoin's Backend
 
-Documentation for setup backend and how to use the end point
+## System Requirements
+
+Ensure your system meets the following requirements before running the application:
+
+- **Node.js:** Version 14.x or newer. [Node.js Installation](https://nodejs.org/)
+- **MySQL Server:** Version 8.x or newer. [MySQL Installation Guide](https://dev.mysql.com/doc/)
+
+## Technologies Used
+
+This application is developed using several key technologies:
+
+- **NestJS:** A Node.js based backend framework. [NestJS Documentation](https://docs.nestjs.com/)
+- **Prisma ORM:** An ORM for Node.js and TypeScript. [Prisma Documentation](https://www.prisma.io/docs/)
+- **CASL JavaScript:** A library for managing authorization in JavaScript/TypeScript. [CASL Documentation](https://casl.js.org/)
+- **Dotenv:** A library for managing environment variables. [Dotenv Documentation](https://www.npmjs.com/package/dotenv)
+- **TypeScript:** A typed superset of JavaScript. [TypeScript Documentation](https://www.typescriptlang.org/)
+
+## Programming Language
+
+This application is written in **TypeScript**.
 
 # Project Setup Guide
 
@@ -247,13 +263,24 @@ Documentation for setup backend and how to use the end point
 
 ## Icd9 and Icd10:
 
-8. **icd10 List:**
+21. **icd10 List:**
     - **Endpoint**: `/icd9`
     - **Method**: `GET`
     - **Authorization**: Requires token
 
-9. **Icd10 List:**
+22. **Icd10 List:**
     - **Endpoint**: `/icd10`
     - **Method**: `GET`
     - **Authorization**: Requires token
 
+## Credits
+
+Special thanks to the developers and communities behind the technologies used in this project:
+
+- [NestJS](https://nestjs.com/) by the NestJS Team
+- [Prisma](https://www.prisma.io/) by the Prisma Team
+- [CASL](https://casl.js.org/) by the CASL Team
+- [Dotenv](https://www.npmjs.com/package/dotenv) by the Dotenv Contributors
+- [TypeScript](https://www.typescriptlang.org/) by the TypeScript Team
+
+Thank you for creating and maintaining these fantastic tools!
