@@ -31,13 +31,18 @@ Documentation for setup backend and how to use the end point
     npx prisma migrate dev
     ```
 
-5. Generate Prisma client:
+5. Inject SQL to table user for superadmin:
+    ```
+   id: superadmin, password: nimdarepus, role: admin
+   ```
+
+6. Generate Prisma client:
 
     ```bash
     npx prisma generate
     ```
 
-6. Start the development server:
+7. Start the development server:
 
     ```bash
     npm run start:dev
@@ -84,7 +89,7 @@ Documentation for setup backend and how to use the end point
       }
       ```
 
-4. **Create Account for Eployee Registration:**
+4. **Create Account for Registered Eployee:**
     - **Endpoint**: `/signup`
     - **Method**: `POST`
     - **Body**:
@@ -240,4 +245,15 @@ Documentation for setup backend and how to use the end point
     - **Method**: `GET`
     - **Authorization**: Requires token
 
+## Icd9 and Icd10:
+
+8. **icd10 List:**
+    - **Endpoint**: `/icd9`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+9. **Icd10 List:**
+    - **Endpoint**: `/icd10`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
 
