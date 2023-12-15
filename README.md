@@ -1,73 +1,243 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+Raw readme
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Medpoin's Backend
 
-## Description
+Documentation for setup backend and how to use the end point
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Project Setup Guide
 
-## Installation
+## Setup:
 
-```bash
-$ npm install
-```
+1. Install dependencies:
 
-## Running the app
+    ```bash
+    npm install
+    ```
 
-```bash
-# development
-$ npm run start
+2. Create a database named `<nama_database>` on your local MySQL server.
 
-# watch mode
-$ npm run start:dev
+3. Update the `.env` file with your database connection information:
 
-# production mode
-$ npm run start:prod
-```
+    ```plaintext
+    SECRET_KEY_ACCESS='secret'
+    SECRET_KEY_REFRESH='secret'
+    DATABASE_URL="mysql://<user>:<password>@localhost:3306/<nama_database>"
+    ```
 
-## Test
+4. Run Prisma migration to create database tables:
 
-```bash
-# unit tests
-$ npm run test
+    ```bash
+    npx prisma migrate dev
+    ```
 
-# e2e tests
-$ npm run test:e2e
+5. Generate Prisma client:
 
-# test coverage
-$ npm run test:cov
-```
+    ```bash
+    npx prisma generate
+    ```
 
-## Support
+6. Start the development server:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+    ```bash
+    npm run start:dev
+    ```
 
-## Stay in touch
+**Note:** Make sure to replace `<nama_database>`, `<user>`, and `<password>` with your actual database name, user, and password.
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
+# API Endpoints
 
-Nest is [MIT licensed](LICENSE).
+## User Registration:
+
+1. **Doctor Registration:**
+    - **Endpoint**: `/signup/dokter`
+    - **Method**: `POST`
+    - **Body**:
+      ```json
+      {
+        "id": "string",
+        "nama": "string",
+        "spesialis": "string"
+      }
+      ```
+
+2. **Nurse Registration:**
+    - **Endpoint**: `/signup/perawat`
+    - **Method**: `POST`
+    - **Body**:
+      ```json
+      {
+        "id": "string",
+        "nama": "string"
+      }
+      ```
+
+3. **Staff Registration:**
+    - **Endpoint**: `/signup/staf`
+    - **Method**: `POST`
+    - **Body**:
+      ```json
+      {
+        "id": "string",
+        "nama": "string"
+      }
+      ```
+
+4. **Create Account for Eployee Registration:**
+    - **Endpoint**: `/signup`
+    - **Method**: `POST`
+    - **Body**:
+      ```json
+      {
+        "id": "string",
+        "password": "string",
+        "role": "string"
+      }
+      ```
+
+## User Authentication:
+
+5. **User Login:**
+    - **Endpoint**: `/signin`
+    - **Method**: `POST`
+    - **Body**:
+      ```json
+      {
+        "id": "string",
+        "password": "string"
+      }
+      ```
+    - **Returns**: `accessToken` to be used in the Authorization header for subsequent requests (`Bearer ${token}`).
+
+6. **User Logout:**
+    - **Endpoint**: `/signout`
+    - **Method**: `DELETE`
+
+7. **Refresh Token:**
+    - **Endpoint**: `/token`
+    - **Method**: `GET`
+    - **Returns**: A new `accessToken`.
+
+## Dashboard:
+
+8. **Patient Dashboard:**
+    - **Endpoint**: `/dashboard`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+9. **Doctor List:**
+    - **Endpoint**: `/dashboard/dokter`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+10. **Nurse List:**
+    - **Endpoint**: `/dashboard/perawat`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+11. **Staff/Admin List:**
+    - **Endpoint**: `/dashboard/staf`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+## Patient Operations:
+
+12. **Patient Registration:**
+    - **Endpoint**: `/pasien/registrasi`
+    - **Method**: `POST`
+    - **Authorization**: Requires token
+    - **Body**:
+      ```json
+      {
+        "no_rm": "string",
+        "name": "string",
+        "no_ktp": "string",
+        "no_bpjs": "string",
+        "tempat_lahir": "string",
+        "tanggal_lahir": "string",
+        "jenis_kelamin": "string",
+        "gol_darah": "string",
+        "no_hp": "string",
+        "nama_keluarga": "string",
+        "no_hp_keluarga": "string",
+        "alamat_lengkap": "string",
+        "status_perkawinan": "string"
+      }
+      ```
+
+13. **Get All Patients:**
+    - **Endpoint**: `/pasien`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+14. **Get Latest Medical Record Number:**
+    - **Endpoint**: `/pasien/rm`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+15. **Register Patient for Treatment Queue:**
+    - **Endpoint**: `/rawat`
+    - **Method**: `POST`
+    - **Authorization**: Requires token
+    - **Body**:
+      ```json
+      {
+        "no_rm": "string",
+        "dokter_id": "string"
+      }
+      ```
+
+16. **Register Anamnesis for Treated Patient:**
+    - **Endpoint**: `/anamnesis`
+    - **Method**: `POST`
+    - **Authorization**: Requires token
+    - **Body**:
+      ```json
+      {
+        "nama": "string",
+        "no_rm": "string",
+        "no_rawat": "string",
+        "dokter_id": "string",
+        "perawat_id": "string",
+        "berat": "string",
+        "suhu": "string",
+        "tinggi": "string",
+        "saturasi": "string",
+        "tensi": "string"
+      }
+      ```
+
+17. **Get Anamnesis Details for Treated Patient:**
+    - **Endpoint**: `/anamnesis?no_rawat=${no_rawat}`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+18. **Add Diagnosis and Treatment for Treated Patient:**
+    - **Endpoint**: `/pemeriksaan`
+    - **Method**: `POST`
+    - **Authorization**: Requires token
+    - **Body**:
+      ```json
+      {
+        "no_rm": "string",
+        "no_rawat": "string",
+        "dokter_id": "string",
+        "keluhan": "string",
+        "tindakan": "string",
+        "diagnosis": "string",
+        "resep_obat": "string"
+      }
+      ```
+
+19. **Get Medical Records for Patient:**
+    - **Endpoint**: `/rekammedis`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+20. **Get Detailed Medical Record for Patient:**
+    - **Endpoint**: `/rekammedis/detail?no_rm=RM-00001`
+    - **Method**: `GET`
+    - **Authorization**: Requires token
+
+
