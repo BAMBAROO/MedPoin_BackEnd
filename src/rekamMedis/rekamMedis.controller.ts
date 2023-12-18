@@ -26,7 +26,7 @@ export class RekamMedisController {
   rekamMedis(@Req() req: Request, @Res() res: Response) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, RekamMedis);
       return this.rekamMedisService.getRekamMedis(req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
