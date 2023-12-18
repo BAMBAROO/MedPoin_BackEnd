@@ -11,6 +11,7 @@ import { Request, Response } from 'express';
 import { RekamMedisService } from './rekamMedis.service';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
+import { RekamMedis } from '../ability/entities/rules.entitiy';
 
 @Controller('rekammedis')
 export class RekamMedisController {
@@ -49,7 +50,7 @@ export class RekamMedisController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, RekamMedis);
       return this.rekamMedisService.getRekamMedisDetail(req, res, {
         no_rm,
       });
