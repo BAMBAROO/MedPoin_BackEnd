@@ -83,7 +83,7 @@ export class AbilityFactory {
     } else if (user.role === Role.PERAWAT) {
       can(Actions.Read, 'all');
       can(Actions.Create, Dashboard);
-      cannot(Actions.Create, Pasien).because("Your're not allowed");
+      can(Actions.Create, Pasien);
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
       // cannot(Actions.Read, RekamMedis);
