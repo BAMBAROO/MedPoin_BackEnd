@@ -12,7 +12,7 @@ import { PemeriksaanService } from './pemeriksaan.service';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Request, Response } from 'express';
-import { Anamnesis } from '../ability/entities/rules.entitiy';
+import { Anamnesis, Pemeriksaan } from '../ability/entities/rules.entitiy';
 
 @Controller('pemeriksaan')
 export class PemeriksaanController {
@@ -29,7 +29,7 @@ export class PemeriksaanController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Anamnesis);
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, Pemeriksaan);
       return this.pemeriksaanService.pemeriksaanDokter(dto, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {

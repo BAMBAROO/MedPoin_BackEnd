@@ -60,8 +60,8 @@ export class AbilityFactory {
       can(Actions.Create, Pasien);
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
-      can(Actions.Create, Pemeriksaan);
-      can(Actions.Create, RekamMedis);
+      // can(Actions.Create, Pemeriksaan);
+      // can(Actions.Create, RekamMedis);
       can(Actions.Read, RekamMedis);
       cannot(Actions.Create, Dokter).because("Your're not allowed");
       cannot(Actions.Create, Perawat).because("Your're not allowed");
@@ -74,7 +74,7 @@ export class AbilityFactory {
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
       can(Actions.Create, Pemeriksaan);
-      can(Actions.Create, RekamMedis);
+      // can(Actions.Create, RekamMedis);
       can(Actions.Read, RekamMedis);
       cannot(Actions.Create, Dokter).because("Your're not allowed");
       cannot(Actions.Create, Perawat).because("Your're not allowed");
@@ -86,7 +86,7 @@ export class AbilityFactory {
       cannot(Actions.Create, Pasien).because("Your're not allowed");
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
-      cannot(Actions.Read, RekamMedis);
+      // cannot(Actions.Read, RekamMedis);
       cannot(Actions.Create, Pemeriksaan).because("Your're not allowed");
       cannot(Actions.Create, RekamMedis).because("Your're not allowed");
       cannot(Actions.Create, Dokter).because("Your're not allowed");
