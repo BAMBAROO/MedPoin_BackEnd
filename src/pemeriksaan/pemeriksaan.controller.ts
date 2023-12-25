@@ -12,7 +12,7 @@ import { PemeriksaanService } from './pemeriksaan.service';
 import { AbilityFactory, Actions } from '../ability/ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Request, Response } from 'express';
-import { Anamnesis, Pemeriksaan } from '../ability/entities/rules.entitiy';
+import { Pemeriksaan } from '../ability/entities/rules.entitiy';
 
 @Controller('pemeriksaan')
 export class PemeriksaanController {
