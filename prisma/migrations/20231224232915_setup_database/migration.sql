@@ -128,7 +128,7 @@ CREATE TABLE `rekam_medis` (
     INDEX `no_anamnesis`(`no_anamnesis`),
     INDEX `no_pemeriksaan`(`no_pemeriksaan`),
     INDEX `no_rawat`(`no_rawat`),
-    PRIMARY KEY (`no_rm`)
+    PRIMARY KEY (`no_rawat`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
