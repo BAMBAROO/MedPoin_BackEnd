@@ -91,7 +91,7 @@ model pasien {
   anamnesis         anamnesis[]
   antrian           antrian[]
   pemeriksaan       pemeriksaan[]
-  rekam_medis       rekam_medis?
+  rekam_medis       rekam_medis[]
 }
 
 model pemeriksaan {
@@ -124,8 +124,8 @@ model perawat {
 }
 
 model rekam_medis {
-  no_rm          String      @id @db.VarChar(255)
-  no_rawat       String      @db.VarChar(255)
+  no_rm          String      @db.VarChar(255)
+  no_rawat       String      @id @db.VarChar(255)
   no_anamnesis   Int         @db.Int
   no_pemeriksaan Int         @db.Int
   pasien         pasien      @relation(fields: [no_rm], references: [no_rm], onUpdate: Restrict, map: "rekam_medis_ibfk_1")
