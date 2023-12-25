@@ -56,47 +56,43 @@ export class AbilityFactory {
       can(Actions.Manage, 'all');
     } else if (user.role === Role.STAF) {
       can(Actions.Read, 'all');
-      can(Actions.Create, Dashboard);
+      can(Actions.Read, RekamMedis);
       can(Actions.Create, Pasien);
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
-      can(Actions.Create, Pemeriksaan);
-      can(Actions.Create, RekamMedis);
-      can(Actions.Read, RekamMedis);
-      cannot(Actions.Create, Dokter).because("Your're not allowed");
-      cannot(Actions.Create, Perawat).because("Your're not allowed");
-      cannot(Actions.Create, Staf).because("Your're not allowed");
-      cannot(Actions.Create, UserEntity).because("Your're not allowed");
+      cannot(Actions.Create, Dokter).because("You're not allowed");
+      cannot(Actions.Create, Perawat).because("You're not allowed");
+      cannot(Actions.Create, Staf).because("You're not allowed");
+      cannot(Actions.Create, UserEntity).because("You're not allowed");
     } else if (user.role === Role.DOKTER) {
       can(Actions.Read, 'all');
+      can(Actions.Read, RekamMedis);
       can(Actions.Create, Dashboard);
       can(Actions.Create, Pasien);
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
       can(Actions.Create, Pemeriksaan);
-      can(Actions.Read, RekamMedis);
-      cannot(Actions.Create, Dokter).because("Your're not allowed");
-      cannot(Actions.Create, Perawat).because("Your're not allowed");
-      cannot(Actions.Create, Staf).because("Your're not allowed");
-      cannot(Actions.Create, UserEntity).because("Your're not allowed");
+      cannot(Actions.Create, Dokter).because("You're not allowed");
+      cannot(Actions.Create, Perawat).because("You're not allowed");
+      cannot(Actions.Create, Staf).because("You're not allowed");
+      cannot(Actions.Create, UserEntity).because("You're not allowed");
     } else if (user.role === Role.PERAWAT) {
       can(Actions.Read, 'all');
+      can(Actions.Read, RekamMedis);
       can(Actions.Create, Dashboard);
       can(Actions.Create, Pasien);
       can(Actions.Create, Rawat);
       can(Actions.Create, Anamnesis);
-      can(Actions.Read, RekamMedis);
-      cannot(Actions.Create, Pemeriksaan).because("Your're not allowed");
-      cannot(Actions.Create, RekamMedis).because("Your're not allowed");
-      cannot(Actions.Create, Dokter).because("Your're not allowed");
-      cannot(Actions.Create, Perawat).because("Your're not allowed");
-      cannot(Actions.Create, Staf).because("Your're not allowed");
-      cannot(Actions.Create, UserEntity).because("Your're not allowed");
+      cannot(Actions.Create, Pemeriksaan).because("You're not allowed");
+      cannot(Actions.Create, Dokter).because("You're not allowed");
+      cannot(Actions.Create, Perawat).because("You're not allowed");
+      cannot(Actions.Create, Staf).because("You're not allowed");
+      cannot(Actions.Create, UserEntity).because("You're not allowed");
     } else {
       can(Actions.Read, 'all');
-      cannot(Actions.Delete, 'all').because("Your're not allowed");
-      cannot(Actions.Create, 'all').because("Your're not allowed");
-      cannot(Actions.Update, 'all').because("Your're not allowed");
+      cannot(Actions.Delete, 'all').because("You're not allowed");
+      cannot(Actions.Create, 'all').because("You're not allowed");
+      cannot(Actions.Update, 'all').because("You're not allowed");
     }
 
     return build({
