@@ -56,7 +56,7 @@ export class AnamnesisController {
   ) {
     const ability = this.abilityFactory.defineAbility(req['user']);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Actions.Create, 'all');
+      ForbiddenError.from(ability).throwUnlessCan(Actions.Read, 'all');
       return this.anamnesisService.getAnamnesis(no_rawat, req, res);
     } catch (e) {
       if (e instanceof ForbiddenError) {
