@@ -8,7 +8,21 @@ export class DashboardService {
 
   async getDataDashboard(req: Request, res: Response) {
     try {
-      const data = await this.dashboardHelper.dashboard();
+      const rawData = await this.dashboardHelper.dashboard();
+
+      const data = (rawData: any) => {
+        const result = rawData?.map((data: any) => {
+          const date = data?.tgl_antrian;
+          const dateExtract = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+          const dateNow = new Date();
+          const today = `${dateNow.getDate()}-${dateNow.getMonth()}-${dateNow.getFullYear()}`;
+          if (dateExtract === today) {
+            return data;
+          }
+        });
+        return result.filter((data: any): boolean => data !== undefined);
+      };
+
       if (data?.length === 0) {
         return res.sendStatus(HttpStatus.NO_CONTENT);
       }

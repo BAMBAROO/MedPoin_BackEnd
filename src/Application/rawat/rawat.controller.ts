@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpException,
   HttpStatus,
   Post,
@@ -13,7 +12,7 @@ import { RawatDto } from './dto';
 import { RawatService } from './rawat.service';
 import { ForbiddenError } from '@casl/ability';
 import { AbilityFactory, Actions } from '../../Domain/Ability/ability.factory';
-import { Rawat, Staf } from '../../Domain/Ability/entities/rules.entitiy';
+import { Rawat } from '../../Domain/Ability/entities/rules.entitiy';
 
 @Controller('rawat')
 export class RawatController {

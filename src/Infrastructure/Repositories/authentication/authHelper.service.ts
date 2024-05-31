@@ -39,6 +39,7 @@ class AuthHelperService {
       const staff = await this.prismaService.staf.findUnique({
         where: { id },
       });
+
       if (!nurse && !doctor && !staff) {
         throw new HttpException(
           {
@@ -49,6 +50,7 @@ class AuthHelperService {
           HttpStatus.NOT_FOUND,
         );
       }
+
       if (nurse) return nurse;
       if (doctor) return doctor;
       if (staff) return staff;

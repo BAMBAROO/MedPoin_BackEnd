@@ -3,7 +3,6 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Query,
   Req,
   Res,
 } from '@nestjs/common';

@@ -10,11 +10,13 @@ export class AnamnesisService {
   async addAnamnesis(dto: AnamnesisDto, req: Request, res: Response) {
     try {
       const data = await this.anamnesisHelperService.addAnamnesis(dto);
+
       const response = {
         error: false,
         message: 'success',
         data: data,
       };
+
       return res.status(HttpStatus.OK).json({
         ...response,
         timeStamp: new Date().toISOString(),
@@ -28,6 +30,7 @@ export class AnamnesisService {
   async getAnamnesis(no_rawat: string, req: Request, res: Response) {
     try {
       const data = await this.anamnesisHelperService.getAnamnesis(no_rawat);
+
       if (!data) {
         return res.sendStatus(HttpStatus.NO_CONTENT);
       }
@@ -36,6 +39,7 @@ export class AnamnesisService {
         message: 'success',
         data: data,
       };
+
       return res.status(HttpStatus.OK).json({
         ...response,
         timeStamp: new Date().toISOString(),

@@ -20,7 +20,11 @@ import {
 } from './dto';
 import { AbilityFactory, Actions } from '../../Domain/Ability/ability.factory';
 import { ForbiddenError } from '@casl/ability';
-import { Dokter, Perawat, Staf } from '../../Domain/Ability/entities/rules.entitiy';
+import {
+  Dokter,
+  Perawat,
+  Staf,
+} from '../../Domain/Ability/entities/rules.entitiy';
 
 @Controller()
 export class AuthController {

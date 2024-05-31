@@ -28,8 +28,10 @@ export class AuthService {
 
   async signUp(dto: SignUpDto, req: Request, res: Response) {
     dto.password = await this.authHelper.hashingPassword(dto.password);
+
     await this.authHelper.checkSignedUpId(dto.id);
     await this.authHelper.checkExistId(dto.id);
+
     const data = await this.authHelper.addUser(dto);
     const response = {
       error: false,
@@ -101,12 +103,15 @@ export class AuthService {
         dto.password !== this.config.get<string>('SUPERADMIN_PASS')
       )
         await this.authHelper.verifyPassword(user.password, dto.password);
+
       const payload = { id: user.id, role: user.role };
       const accessToken = await this.authHelper.createAccessToken(payload);
       const refreshToken = await this.authHelper.createRefreshToken(payload);
+
       res.cookie('refreshToken', refreshToken, {
         maxAge: 24 * 60 * 60 * 1000,
       });
+
       const response = {
         error: false,
         message: 'success',
@@ -138,7 +143,9 @@ export class AuthService {
           HttpStatus.UNAUTHORIZED,
         );
       }
+
       await this.authHelper.deleteRefreshToken(refreshToken);
+
       const response = {
         error: false,
         message: 'success',
@@ -164,7 +171,9 @@ export class AuthService {
       const { id, role } = await this.authHelper.verifyRefreshToken(
         token.refresh_token,
       );
+
       const accessToken = await this.authHelper.createAccessToken({ id, role });
+
       const response = {
         error: false,
         message: 'success',

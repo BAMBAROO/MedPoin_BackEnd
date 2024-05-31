@@ -97,7 +97,6 @@ class AnamnesisHelperService {
           HttpStatus.UNPROCESSABLE_ENTITY,
         );
       }
-      console.log({ result });
       return {
         no_rm: result.no_rm,
         no_rawat: result.no_rawat,
