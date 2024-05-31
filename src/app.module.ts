@@ -4,17 +4,17 @@ import {
   NestModule,
   RequestMethod,
 } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { PasienModule } from './pasien/pasien.module';
-import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './Application/authentication/auth.module';
+import { PasienModule } from './Application/pasien/pasien.module';
+import { PrismaModule } from './Infrastructure/Database/prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
-import { VerifyToken } from './middleware/verifyToken';
-import { DashboardModule } from './dashboard/dashboard.module';
-import { RawatModule } from './rawat/rawat.module';
-import { AnamnesisModule } from './anamnesis/anamnesis.module';
-import { PemeriksaanModule } from './pemeriksaan/pemeriksaan.module';
-import { RekamMedisModule } from './rekamMedis/rekamMedis.module';
-import { IcdModule } from './icd/icd.module';
+import { VerifyToken } from './Application/Middleware/verifyToken';
+import { DashboardModule } from './Application/dashboard/dashboard.module';
+import { RawatModule } from './Application/rawat/rawat.module';
+import { AnamnesisModule } from './Application/anamnesis/anamnesis.module';
+import { PemeriksaanModule } from './Application/pemeriksaan/pemeriksaan.module';
+import { RekamMedisModule } from './Application/rekamMedis/rekamMedis.module';
+import { IcdModule } from './Application/icd/icd.module';
 
 @Module({
   imports: [

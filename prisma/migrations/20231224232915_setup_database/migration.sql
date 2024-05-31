@@ -193,6 +193,10 @@ ALTER TABLE `rekam_medis` ADD CONSTRAINT `rekam_medis_ibfk_3` FOREIGN KEY (`no_a
 -- AddForeignKey
 ALTER TABLE `rekam_medis` ADD CONSTRAINT `rekam_medis_ibfk_4` FOREIGN KEY (`no_pemeriksaan`) REFERENCES `pemeriksaan`(`no_pemeriksaan`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+INSERT INTO `staf` VALUES ('STF-001', 'Bagas');
+INSERT INTO `dokter` VALUES ('DR-001', 'Bryan', 'Jantung');
+INSERT INTO `perawat` VALUES ('NR-001', 'Santi');
+
 INSERT INTO `icd10` VALUES ('A00', 'Cholera');
 INSERT INTO `icd10` VALUES ('A00.0', 'Cholera due to Vibrio cholerae 01, biovar cholerae');
 INSERT INTO `icd10` VALUES ('A00.1', 'Cholera due to Vibrio cholerae 01, biovar eltor');
