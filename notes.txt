@@ -5,6 +5,7 @@ Setup:
 4. npx prisma migrate dev
 6. npx prisma generate
 7. npm run start:dev
+asd
 
 Hanya catatan:
 npm install -D prisma
